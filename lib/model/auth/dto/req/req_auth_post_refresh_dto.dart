@@ -1,0 +1,11 @@
+class ReqAuthPostRefreshDTO {
+  final String refreshJwt;
+
+  ReqAuthPostRefreshDTO._({required this.refreshJwt});
+
+  factory ReqAuthPostRefreshDTO.of(String refreshJwt) {
+    return ReqAuthPostRefreshDTO._(
+      refreshJwt: refreshJwt,
+    );
+  }
+}

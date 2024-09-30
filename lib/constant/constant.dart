@@ -1,6 +1,6 @@
 
 class Constant {
 
-  static const backUrl = "https://jaylogapi.jaybon.org";
+  static const baseUrl = "https://jaylogapi.jaybon.org";
 
 }

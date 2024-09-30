@@ -1,12 +1,16 @@
 
+import 'dart:convert';
+
+import 'package:jaylog/common/dto/res_dto.dart';
+import 'package:jaylog/constant/constant.dart';
+import 'package:jaylog/model/auth/dto/req/req_auth_post_login_dto.dart';
+import 'package:jaylog/model/auth/dto/res/res_auth_post_login_dto.dart';
+
 class AuthRepository {
+  static const _url = '/auth';
 
-  Future<bool> login(String email, String password) async {
-
-
-    // Simulate a network request
-    await Future.delayed(Duration(seconds: 1));
-    return email == '';
+  static Future<ResDTO<ResAuthPostLoginDTO?>> login(ReqAuthPostLoginDTO reqAuthPostLoginDTO) async {
+    return ResDTO(code: 0, message: "message");
   }
 
 }
