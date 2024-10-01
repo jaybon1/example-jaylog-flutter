@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jaylog/util/custom.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,9 +32,26 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends HookConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+
+    useEffect(() {
+      CustomFetch.dio.get(
+        "/v1/main",
+        onReceiveProgress: (received, total) {
+          print(received);
+          print(total);
+        },
+      )
+      .then((response) {
+        print(response.data);
+      })
+      .catchError((error) {
+        print(error);
+      });
+    }, []);
+
     return Scaffold(
       backgroundColor: Color(0xFFADD8E6), // Light blue background
       body: Center(

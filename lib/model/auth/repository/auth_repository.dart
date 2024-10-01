@@ -1,16 +1,15 @@
-
-import 'dart:convert';
-
-import 'package:jaylog/common/dto/res_dto.dart';
-import 'package:jaylog/constant/constant.dart';
+import 'package:dio/dio.dart';
 import 'package:jaylog/model/auth/dto/req/req_auth_post_login_dto.dart';
-import 'package:jaylog/model/auth/dto/res/res_auth_post_login_dto.dart';
+import 'package:jaylog/util/custom.dart';
 
 class AuthRepository {
   static const _url = '/auth';
 
-  static Future<ResDTO<ResAuthPostLoginDTO?>> login(ReqAuthPostLoginDTO reqAuthPostLoginDTO) async {
-    return ResDTO(code: 0, message: "message");
-  }
+  // static Future<Response> login(ReqAuthPostLoginDTO reqAuthPostLoginDTO) async {
+  //   return await CustomFetch.dio.post("$_url/login", data: reqAuthPostLoginDTO);
+  // }
 
+  static Future<Response> login(ReqAuthPostLoginDTO reqAuthPostLoginDTO) async {
+    return await CustomFetch.dio.post("$_url/login", data: reqAuthPostLoginDTO);
+  }
 }
