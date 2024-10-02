@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:jaylog/constant/constant.dart';
 import 'package:jaylog/model/auth/dto/req/req_auth_post_refresh_dto.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -38,11 +37,6 @@ class CustomDioInterceptor extends Interceptor {
     super.onRequest(options, handler);
   }
 
-  // @override
-  // void onResponse(Response response, ResponseInterceptorHandler handler) async {
-  //   super.onResponse(response, handler);
-  // }
-
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) async {
     super.onResponse(response, handler);
@@ -60,7 +54,7 @@ class CustomDioInterceptor extends Interceptor {
       try {
         Response responseOfRefresh =
             await _dio.post('${Constant.baseUrl}/auth/refresh',
-                data: ReqAuthPostRefreshDTO.of(refreshJwt),
+                data: ReqAuthPostRefreshDTO.of(refreshJwt: refreshJwt),
                 options: Options(
                   contentType: Headers.jsonContentType,
                 ));
@@ -89,8 +83,7 @@ class CustomDioInterceptor extends Interceptor {
         // authStore 로그아웃 처리
         return handler.reject(err);
       }
-    } else if (err.response?.data != null) {
-    }
+    } else if (err.response?.data != null) {}
     super.onError(err, handler);
   }
 }

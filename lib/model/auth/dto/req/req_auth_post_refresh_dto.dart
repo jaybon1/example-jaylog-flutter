@@ -3,7 +3,7 @@ class ReqAuthPostRefreshDTO {
 
   ReqAuthPostRefreshDTO._({required this.refreshJwt});
 
-  factory ReqAuthPostRefreshDTO.of(String refreshJwt) {
+  factory ReqAuthPostRefreshDTO.of({required String refreshJwt}) {
     return ReqAuthPostRefreshDTO._(
       refreshJwt: refreshJwt,
     );
