@@ -34,7 +34,12 @@ final GoRouter _router = GoRouter(
     ),
     GoRoute(
       path: "/auth",
-      redirect: (BuildContext context, GoRouterState state) => "/auth/login",
+      redirect: (BuildContext context, GoRouterState state) {
+        if (state.path == "/auth") {
+          return "/auth/login";
+        }
+        return null;
+      },
       routes: [
         GoRoute(
           path: "join",
