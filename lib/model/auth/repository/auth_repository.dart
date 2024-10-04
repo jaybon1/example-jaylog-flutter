@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:jaylog/common/dto/res_dto.dart';
 import 'package:jaylog/model/auth/dto/req/req_auth_post_join_dto.dart';
 import 'package:jaylog/model/auth/dto/req/req_auth_post_login_dto.dart';
 import 'package:jaylog/model/auth/dto/req/req_auth_post_refresh_dto.dart';

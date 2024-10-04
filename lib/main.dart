@@ -6,8 +6,12 @@ import 'package:jaylog/view/article/write/article_write_page.dart';
 import 'package:jaylog/view/auth/join/auth_join_page.dart';
 import 'package:jaylog/view/auth/login/auth_login_page.dart';
 import 'package:jaylog/view/main/main_page.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:jaylog/view/my/info/my_info_page.dart';
+import 'package:jaylog/view/my/my_page.dart';
 
 void main() async {
+  usePathUrlStrategy();
   runApp(const MyApp());
 }
 
@@ -18,6 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
       routerConfig: _router,
     );
   }
@@ -35,10 +40,9 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: "/auth",
       redirect: (BuildContext context, GoRouterState state) {
-        if (state.path == "/auth") {
+        if (state.fullPath == "/auth") {
           return "/auth/login";
         }
-        return null;
       },
       routes: [
         GoRoute(
@@ -57,8 +61,19 @@ final GoRouter _router = GoRouter(
     ),
     GoRoute(
       path: "/article",
-      redirect: (BuildContext context, GoRouterState state) => "/",
+      redirect: (BuildContext context, GoRouterState state) {
+        // print(state.pathParameters);
+        if (state.fullPath == "/article") {
+          return "/";
+        }
+      },
       routes: [
+        GoRoute(
+          path: "write",
+          builder: (BuildContext context, GoRouterState state) {
+            return const ArticleWritePage();
+          },
+        ),
         GoRoute(
           path: ":id",
           builder: (BuildContext context, GoRouterState state) {
@@ -73,10 +88,18 @@ final GoRouter _router = GoRouter(
             ),
           ],
         ),
+      ],
+    ),
+    GoRoute(
+      path: "/my",
+      builder: (BuildContext context, GoRouterState state) {
+        return const MyPage();
+      },
+      routes: [
         GoRoute(
-          path: "write",
+          path: "info",
           builder: (BuildContext context, GoRouterState state) {
-            return const ArticleWritePage();
+            return const MyInfoPage();
           },
         ),
       ],

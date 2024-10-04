@@ -49,7 +49,9 @@ class CustomDioInterceptor extends Interceptor {
           await SharedPreferences.getInstance();
       String? refreshJwt = sharedPreferences.getString("refreshJwt");
       if (refreshJwt == null) {
-        return handler.reject(err);
+        handler.reject(err);
+        return;
+        // return handler.reject(err);
       }
       try {
         Response responseOfRefresh =
@@ -75,15 +77,19 @@ class CustomDioInterceptor extends Interceptor {
             data: requestOptions.data,
             queryParameters: requestOptions.queryParameters,
           );
-          return handler.resolve(responseOfRetry);
+          handler.resolve(responseOfRetry);
+          // return handler.resolve(responseOfRetry);
         }
       } catch (e) {
         sharedPreferences.remove("accessJwt");
         sharedPreferences.remove("refreshJwt");
         // authStore 로그아웃 처리
-        return handler.reject(err);
+        handler.reject(err);
+        return;
+        // return handler.reject(err);
       }
-    } else if (err.response?.data != null) {}
-    super.onError(err, handler);
+    } else {
+      super.onError(err, handler);
+    }
   }
 }
