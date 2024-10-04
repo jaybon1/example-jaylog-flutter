@@ -37,7 +37,7 @@ class MyPage extends HookConsumerWidget {
           ),
           TabBar(
             controller: tabController,
-            tabs: [
+            tabs: const [
               Tab(
                 text: '내 글',
               ),
@@ -46,6 +46,9 @@ class MyPage extends HookConsumerWidget {
               ),
             ],
           ),
+          ...tabController.index == 0
+              ? [ArticleCard(), ArticleCard()]
+              : [ArticleCard()],
           Text(tabController.index.toString()),
           // ...[1,2,3,4].map((e) => ArticleCard()).toList(),
         ],
