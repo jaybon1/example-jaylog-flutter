@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:jaylog/constant/constant.dart';
+import 'package:jaylog/common/constant/constant.dart';
 import 'package:jaylog/model/auth/dto/req/req_auth_post_refresh_dto.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

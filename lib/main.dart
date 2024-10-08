@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jaylog/view/article/byid/article_by_id_page.dart';
 import 'package:jaylog/view/article/edit/article_edit_page.dart';
 import 'package:jaylog/view/article/write/article_write_page.dart';
@@ -12,7 +13,11 @@ import 'package:jaylog/view/my/my_page.dart';
 
 void main() async {
   usePathUrlStrategy();
-  runApp(const MyApp());
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {

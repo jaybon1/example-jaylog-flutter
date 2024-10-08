@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jaylog/view/_component/common/profile_image.dart';
+import 'package:jaylog/view/_component/common/circle_profile_image.dart';
 
 class ArticleCard extends HookConsumerWidget {
   const ArticleCard({super.key});
@@ -81,8 +81,8 @@ class ArticleCard extends HookConsumerWidget {
                   children: [
                     Row(
                       children: [
-                        ProfileImage(
-                          imageUrl: "https://picsum.photos/200",
+                        CircleProfileImage(
+                          imageUrl: "https://picsum.photos/50",
                           radius: 15,
                         ),
                         Padding(

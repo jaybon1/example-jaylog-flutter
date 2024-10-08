@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jaylog/constant/constant.dart';
+import 'package:jaylog/common/constant/constant.dart';
 import 'package:jaylog/view/_component/appbar/default_app_bar.dart';
 
 class ArticleWriteLayout extends HookConsumerWidget {
