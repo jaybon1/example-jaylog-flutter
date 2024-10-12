@@ -12,6 +12,7 @@ class DefaultLayout extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: CustomColor.scaffoldColor,
+      extendBodyBehindAppBar: false,
       appBar: const DefaultAppBar(),
       body: SafeArea(
         child: body,

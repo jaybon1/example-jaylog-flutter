@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jaylog/store/auth_store.dart';
@@ -10,31 +11,8 @@ class DefaultAppBar extends HookConsumerWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final goRouterState = GoRouterState.of(context);
-    final authStore = ref.watch(authStoreGlobal);
-
-    if (goRouterState.fullPath != null &&
-        goRouterState.fullPath!.contains("/auth")) {
-      return AppBar(
-        toolbarHeight: 75,
-        shadowColor: Colors.black,
-        elevation: 10.0,
-        backgroundColor: Colors.white,
-        title: InkWell(
-          onTap: () {
-            if (goRouterState.fullPath != "/") {
-              GoRouter.of(context).go("/");
-            }
-          },
-          child: const Padding(
-            padding: EdgeInsets.only(top: 7),
-            child: Image(
-              image: AssetImage("asset/image/jaylog.png"),
-              width: 100,
-            ),
-          ),
-        ),
-      );
-    }
+    final authStoreState = ref.watch(authStoreGlobal);
+    final authStore = ref.read(authStoreGlobal);
 
     return AppBar(
       toolbarHeight: 75,
@@ -57,9 +35,8 @@ class DefaultAppBar extends HookConsumerWidget implements PreferredSizeWidget {
       ),
       actions: [
         Row(
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            authStore.loginUser != null
+            authStoreState.loginUser != null
                 ? Row(
                     children: [
                       ElevatedButton(
@@ -84,14 +61,18 @@ class DefaultAppBar extends HookConsumerWidget implements PreferredSizeWidget {
                           itemBuilder: (context) {
                             return [
                               PopupMenuItem(
-                                child: InkWell(
-                                  child: Text("내 제이로그"),
-                                  onTap: () {
+                                onTap: () {
+                                  if (goRouterState.fullPath != "/my") {
                                     GoRouter.of(context).push("/my");
-                                  },
-                                ),
+                                  }
+                                },
+                                child: Text("내 제이로그"),
                               ),
-                              const PopupMenuItem(
+                              PopupMenuItem(
+                                onTap: () {
+                                  authStore.logout();
+                                  GoRouter.of(context).push("/");
+                                },
                                 child: Text("로그아웃"),
                               ),
                             ];
@@ -103,6 +84,7 @@ class DefaultAppBar extends HookConsumerWidget implements PreferredSizeWidget {
                       ElevatedButton(
                         onPressed: () {
                           if (goRouterState.fullPath != "/auth/login") {
+                            authStore.logout();
                             GoRouter.of(context).go("/auth/login");
                           }
                         },

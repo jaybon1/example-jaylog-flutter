@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jaylog/view/_component/common/circle_profile_image.dart';
 
@@ -35,20 +36,25 @@ class ArticleCard extends HookConsumerWidget {
               //   width: double.infinity,
               //   height: 150,
               // ),
-              const ListTile(
-                titleTextStyle: TextStyle(
+              ListTile(
+                titleTextStyle: const TextStyle(
                   fontSize: 20,
                   color: Colors.black,
                 ),
                 title: Padding(
-                  padding: EdgeInsets.only(top: 5, bottom: 5),
-                  child: Text(
-                    "[번역] Node.js 개요: 아키텍처, API, 이벤트",
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
+                  padding: const EdgeInsets.only(top: 5, bottom: 5),
+                  child: InkWell(
+                    onTap: () {
+                      GoRouter.of(context).push("/article/1");
+                    },
+                    child: const Text(
+                      "[번역] Node.js 개요: 아키텍처, API, 이벤트",
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
                   ),
                 ),
-                subtitle: Column(
+                subtitle: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
@@ -93,7 +99,7 @@ class ArticleCard extends HookConsumerWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                        )
+                        ),
                       ],
                     ),
                     Row(

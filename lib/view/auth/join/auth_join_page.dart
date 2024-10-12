@@ -10,90 +10,72 @@ class AuthJoinPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return UserInfoLayout(
       body: SingleChildScrollView(
-        child: Center(
-          child: SizedBox(
-            width: 350,
-            child: Column(
-              children: [
-                Padding(padding: EdgeInsets.all(16)),
-                Image.asset(
-                  'asset/image/jaylog.png',
-                  width: 200,
-                  height: 100,
+        child: Padding(
+          padding: EdgeInsets.all(45),
+          child: Column(
+            children: [
+              Image.asset(
+                'asset/image/jaylog.png',
+                width: 200,
+                height: 100,
+              ),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: '*아이디',
+                  contentPadding: EdgeInsets.only(left: 10, right: 10),
+                  border: OutlineInputBorder(),
                 ),
-                const SizedBox(
-                  width: 300,
-                  child: TextField(
-                    decoration: InputDecoration(
-                      labelText: '*아이디',
-                      contentPadding: EdgeInsets.only(left: 10, right: 10),
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
+              ),
+              const Padding(padding: EdgeInsets.only(bottom: 20)),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: '*비밀번호',
+                  contentPadding: EdgeInsets.only(left: 10, right: 10),
+                  border: OutlineInputBorder(),
                 ),
-                const Padding(padding: EdgeInsets.only(bottom: 20)),
-                const SizedBox(
-                  width: 300,
-                  child: TextField(
-                    decoration: InputDecoration(
-                      labelText: '*비밀번호',
-                      contentPadding: EdgeInsets.only(left: 10, right: 10),
-                      border: OutlineInputBorder(),
-                    ),
-                    obscureText: true,
-                  ),
+                obscureText: true,
+              ),
+              const Padding(padding: EdgeInsets.only(bottom: 20)),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: '*비밀번호 확인',
+                  contentPadding: EdgeInsets.only(left: 10, right: 10),
+                  border: OutlineInputBorder(),
                 ),
-                const Padding(padding: EdgeInsets.only(bottom: 20)),
-
-                SizedBox(
-                  width: 300,
-                  child: TextField(
-                    decoration: InputDecoration(
-                      labelText: '*비밀번호 확인',
-                      contentPadding: EdgeInsets.only(left: 10, right: 10),
-                      border: OutlineInputBorder(),
-                    ),
-                    obscureText: true,
-                  ),
+                obscureText: true,
+              ),
+              const Padding(padding: EdgeInsets.only(bottom: 20)),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: '한줄소개',
+                  contentPadding: EdgeInsets.only(left: 10, right: 10),
+                  border: OutlineInputBorder(),
                 ),
-                const Padding(padding: EdgeInsets.only(bottom: 20)),
-                SizedBox(
-                  width: 300,
-                  child: TextField(
-                    decoration: InputDecoration(
-                      labelText: '한줄소개',
-                      contentPadding: EdgeInsets.only(left: 10, right: 10),
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ),
-                const Padding(padding: EdgeInsets.only(bottom: 20)),
-                SizedBox(
-                  width: 300,
-                  child: TextButton(
-                    onPressed: () {
-                      GoRouter.of(context).pushReplacement('/auth/login');
-                    },
-                    child: Text('회원가입'),
-                    style: TextButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.blue),
-                  ),
-                ),
-                Container(
-                  width: 300,
-                  child: Divider(),
-                ),
-                TextButton(
+              ),
+              const Padding(padding: EdgeInsets.only(bottom: 20)),
+              SizedBox(
+                width: 300,
+                child: TextButton(
                   onPressed: () {
                     GoRouter.of(context).pushReplacement('/auth/login');
                   },
-                  child: Text('아이디가 있으신가요? 로그인'),
-                  style: TextButton.styleFrom(foregroundColor: Colors.blue),
+                  child: Text('회원가입'),
+                  style: TextButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.blue),
                 ),
-                Padding(padding: EdgeInsets.all(10)),
-              ],
-            ),
+              ),
+              const Divider(),
+              TextButton(
+                onPressed: () {
+                  GoRouter.of(context).pushReplacement('/auth/login');
+                },
+                child: Text('아이디가 있으신가요? 로그인'),
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.blue,
+                ),
+              ),
+            ],
           ),
         ),
       ),

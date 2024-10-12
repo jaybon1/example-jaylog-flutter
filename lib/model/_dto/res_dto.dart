@@ -9,5 +9,4 @@ class ResDTO<T> {
     required this.message,
     this.data,
   });
-
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jaylog/store/auth_store.dart';
 import 'package:jaylog/view/_component/layout/user_info_layout.dart';
 
 class AuthLoginPage extends HookConsumerWidget {
@@ -9,74 +10,82 @@ class AuthLoginPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final authStoreState = ref.watch(authStoreGlobal);
+    final authStore = ref.read(authStoreGlobal);
     final isRemembered = useState(false);
+
+    // useEffect(() {
+    //   authStore.logout();
+    // }, []);
 
     return UserInfoLayout(
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(padding: EdgeInsets.all(16)),
-            Image.asset(
-              'asset/image/jaylog.png',
-              width: 200,
-              height: 100,
-            ),
-            SizedBox(
-              width: 300,
-              child: TextField(
+        child: Padding(
+          padding: EdgeInsets.all(45),
+          child: Column(
+            children: [
+              Image.asset(
+                'asset/image/jaylog.png',
+                width: 200,
+                height: 100,
+              ),
+              TextField(
                 decoration: InputDecoration(
                   labelText: '아이디',
                   contentPadding: EdgeInsets.only(left: 10, right: 10),
                   border: OutlineInputBorder(),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            SizedBox(
-              width: 300,
-              child: TextField(
+              const Padding(padding: EdgeInsets.only(bottom: 20)),
+              TextField(
                 decoration: InputDecoration(
                   labelText: '비밀번호',
                   contentPadding: EdgeInsets.only(left: 10, right: 10),
                   border: OutlineInputBorder(),
                 ),
               ),
-            ),
-            Row(children: [
-              Padding(padding: EdgeInsets.only(left: 43)),
-              Checkbox(
-                value: isRemembered.value,
-                onChanged: (bool? value) {
-                  isRemembered.value = !isRemembered.value;
-                },
-              ),
-              Text('아이디 기억하기'),
-            ]),
-            SizedBox(
-              width: 300,
-              child: TextButton(
-                onPressed: () {},
-                child: Text('로그인'),
-                style: TextButton.styleFrom(
+              Row(children: [
+                Checkbox(
+                  value: isRemembered.value,
+                  onChanged: (bool? value) {
+                    isRemembered.value = !isRemembered.value;
+                  },
+                ),
+                Text('아이디 기억하기'),
+              ]),
+              SizedBox(
+                width: 300,
+                child: TextButton(
+                  onPressed: () {
+                    authStore.setLoginUser(
+                        LoginUser(
+                          username: "temp1",
+                          simpleDescription: "simpleDescription",
+                          profileImage: "https://picsum.photos/50",
+                          roleList: ["USER"],
+                        )
+                    );
+                    GoRouter.of(context).pushReplacement("/");
+                  },
+                  child: Text('로그인'),
+                  style: TextButton.styleFrom(
                     foregroundColor: Colors.white,
-                    backgroundColor: Colors.blue),
+                    backgroundColor: Colors.blue,
+                  ),
+                ),
               ),
-            ),
-            Container(
-              width: 300,
-              child: Divider(),
-            ),
-            TextButton(
-              onPressed: () {
-                GoRouter.of(context).pushReplacement('/auth/join');
-              },
-              child: Text('아이디가 없으신가요? 회원가입'),
-              style: TextButton.styleFrom(foregroundColor: Colors.blue),
-            ),
-            Padding(padding: EdgeInsets.all(10)),
-          ],
+              Divider(),
+              TextButton(
+                onPressed: () {
+                  GoRouter.of(context).pushReplacement('/auth/join');
+                },
+                child: Text('아이디가 없으신가요? 회원가입'),
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.blue,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
