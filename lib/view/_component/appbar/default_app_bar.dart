@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jaylog/store/auth_store.dart';
@@ -12,7 +11,6 @@ class DefaultAppBar extends HookConsumerWidget implements PreferredSizeWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final goRouterState = GoRouterState.of(context);
     final authStoreState = ref.watch(authStoreGlobal);
-    final authStore = ref.read(authStoreGlobal);
 
     return AppBar(
       toolbarHeight: 75,
@@ -53,7 +51,8 @@ class DefaultAppBar extends HookConsumerWidget implements PreferredSizeWidget {
                         ),
                       ),
                       const Padding(padding: EdgeInsets.only(right: 15)),
-                      CircleProfileImage(imageUrl: "https://picsum.photos/50"),
+                      CircleProfileImage(
+                          imageUrl: authStoreState.loginUser?.profileImage),
                       PopupMenuButton(
                           offset: const Offset(0, 40),
                           icon: const Icon(Icons.arrow_drop_down),
@@ -70,8 +69,8 @@ class DefaultAppBar extends HookConsumerWidget implements PreferredSizeWidget {
                               ),
                               PopupMenuItem(
                                 onTap: () {
-                                  authStore.logout();
-                                  GoRouter.of(context).push("/");
+                                  authStoreState.logout();
+                                  GoRouter.of(context).pushReplacement("/");
                                 },
                                 child: Text("로그아웃"),
                               ),
@@ -84,7 +83,7 @@ class DefaultAppBar extends HookConsumerWidget implements PreferredSizeWidget {
                       ElevatedButton(
                         onPressed: () {
                           if (goRouterState.fullPath != "/auth/login") {
-                            authStore.logout();
+                            authStoreState.logout();
                             GoRouter.of(context).go("/auth/login");
                           }
                         },

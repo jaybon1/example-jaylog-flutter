@@ -2,13 +2,48 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:image/image.dart' as imageLib;
 import 'package:image_picker/image_picker.dart';
+import 'package:jaylog/common/constant/constant.dart';
+import 'package:jaylog/main.dart';
 
 class UtilFunction {
+  static void alert({
+    required BuildContext context,
+    required String content,
+    VoidCallback? callback,
+  }) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return PopScope(
+          canPop: false,
+          child: AlertDialog(
+            content: Text(content),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  FocusScope.of(context).unfocus();
+                  if (callback != null) {
+                    callback();
+                  }
+                },
+                child: Text("확인"),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
-  static ImageProvider getImageProviderByImageUrl(String imageUrl) {
+  static ImageProvider getImageProviderByImageUrl(String? imageUrl) {
+    if (imageUrl == null) {
+      return const NetworkImage(Constant.defaultProfileImage);
+    }
     if (imageUrl.startsWith("http")) {
       return NetworkImage(imageUrl);
     }
@@ -39,10 +74,19 @@ class UtilFunction {
   }
 
   static FutureOr<Null> handleDefaultError(error, stackTrace) {
+    print(error);
+    print(stackTrace);
     if (error is DioException && error.response?.data != null) {
-      print(error.response?.data["message"]);
+      alert(
+        context: navigatorKey.currentContext!,
+        content: error.response?.data["message"] ??
+            "예상치 못한 에러가 발생했습니다.\n관리자에게 문의하세요.",
+      );
     } else {
-      print("예상치 못한 에러가 발생했습니다.\n관리자에게 문의하세요.\n$error");
+      alert(
+        context: navigatorKey.currentContext!,
+        content: "예상치 못한 에러가 발생했습니다.\n관리자에게 문의하세요.\n$error",
+      );
     }
   }
 }

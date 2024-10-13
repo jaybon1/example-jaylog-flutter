@@ -8,29 +8,51 @@ final mainViewModelGlobal = ChangeNotifierProvider<_MainViewModel>((ref) {
 });
 
 class _MainViewModel extends ChangeNotifier {
-  List<_Article>? _articleList;
-  Pagination? _pagination;
+  _ArticlePage? _articlePage;
 
-  List<_Article>? get articleList => _articleList;
+  List<_Article>? get articleList => _articlePage?.content;
 
-  Pagination? get pagination => _pagination;
+  _Page? get page => _articlePage?.page;
 
-  void get(String searchValue) {
-    MainRepository.get(searchValue).then((response) {
-      final data = response.data["data"];
-      _articleList = List<_Article>.from(
-          data['articlePage']['content'].map((x) => _Article.fromMap(x)));
-      _pagination = Pagination.fromMap(data['articlePage']['page']);
+  Future<void> get({
+    required String searchValue,
+    Function onError = UtilFunction.handleDefaultError,
+  }) async {
+    try {
+      final response = await MainRepository.get(searchValue);
+      final resDTO = response.data;
+      _articlePage = _ArticlePage.fromMap(resDTO["data"]["articlePage"]);
+    } catch (e, stackTrace) {
+      onError(e, stackTrace);
+    } finally {
       notifyListeners();
-    }).onError(UtilFunction.handleDefaultError);
+    }
+  }
+}
+
+class _ArticlePage {
+  final List<_Article> content;
+  final _Page page;
+
+  _ArticlePage({
+    required this.content,
+    required this.page,
+  });
+
+  factory _ArticlePage.fromMap(Map<String, dynamic> jsonMap) {
+    return _ArticlePage(
+      content: List<_Article>.from(jsonMap['content']
+          .map((thisArticle) => _Article.fromMap(thisArticle))),
+      page: _Page.fromMap(jsonMap['page']),
+    );
   }
 }
 
 class _Article {
-  final int id;
+  final BigInt id;
   final _Writer writer;
   final String title;
-  final String thumbnail;
+  final String? thumbnail;
   final String summary;
   final int likeCount;
   final bool isLikeClicked;
@@ -47,9 +69,9 @@ class _Article {
     required this.createDate,
   });
 
-  factory _Article.fromMap(dynamic jsonMap) {
+  factory _Article.fromMap(Map<String, dynamic> jsonMap) {
     return _Article(
-      id: jsonMap['id'],
+      id: BigInt.from(jsonMap['id']),
       writer: _Writer.fromMap(jsonMap['writer']),
       title: jsonMap['title'],
       thumbnail: jsonMap['thumbnail'],
@@ -59,10 +81,6 @@ class _Article {
       createDate: DateTime.parse(jsonMap['createDate']),
     );
   }
-
-// factory _Article.fromJson(String json) {
-//   return _Article.fromMap(jsonDecode(json));
-// }
 }
 
 class _Writer {
@@ -74,7 +92,7 @@ class _Writer {
     required this.profileImage,
   });
 
-  factory _Writer.fromMap(dynamic jsonMap) {
+  factory _Writer.fromMap(Map<String, dynamic> jsonMap) {
     return _Writer(
       username: jsonMap['username'],
       profileImage: jsonMap['profileImage'],
@@ -82,21 +100,21 @@ class _Writer {
   }
 }
 
-class Pagination {
+class _Page {
   final int size;
   final int number;
   final int totalElements;
   final int totalPages;
 
-  Pagination({
+  _Page({
     required this.size,
     required this.number,
     required this.totalElements,
     required this.totalPages,
   });
 
-  factory Pagination.fromMap(dynamic jsonMap) {
-    return Pagination(
+  factory _Page.fromMap(Map<String, dynamic> jsonMap) {
+    return _Page(
       size: jsonMap['size'],
       number: jsonMap['number'],
       totalElements: jsonMap['totalElements'],

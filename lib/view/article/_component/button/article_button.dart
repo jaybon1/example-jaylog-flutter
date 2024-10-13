@@ -6,7 +6,12 @@ class ArticleButton extends HookConsumerWidget {
   final VoidCallback? onPressed;
   final Color? color;
 
-  const ArticleButton({super.key, required this.text, this.onPressed, this.color});
+  const ArticleButton({
+    super.key,
+    required this.text,
+    this.onPressed,
+    this.color = Colors.grey,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

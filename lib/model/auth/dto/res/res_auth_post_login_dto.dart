@@ -1,4 +1,4 @@
-// import 'dart:convert';
+//
 //
 // class ResAuthPostLoginDTO {
 //   final String accessJwt;
@@ -11,9 +11,5 @@
 //       accessJwt: jsonMap['accessJwt'],
 //       refreshJwt: jsonMap['refreshJwt'],
 //     );
-//   }
-//
-//   factory ResAuthPostLoginDTO.fromJson(String json) {
-//     return ResAuthPostLoginDTO.fromMap(jsonDecode(json));
 //   }
 // }

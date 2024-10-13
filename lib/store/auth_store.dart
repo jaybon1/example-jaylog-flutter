@@ -1,16 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final authStoreGlobal = ChangeNotifierProvider<AuthStore>((ref) {
   return AuthStore();
-  // return AuthStore.of(
-  //   loginUser: LoginUser(
-  //     name: "Jay",
-  //     simpleDescription: "Flutter Developer",
-  //     profileImage: "https://picsum.photos/50",
-  //     roleList: ["admin", "user"],
-  //   ),
-  // );
 });
 
 class AuthStore extends ChangeNotifier {
@@ -18,16 +12,29 @@ class AuthStore extends ChangeNotifier {
 
   LoginUser? get loginUser => _loginUser;
 
-  // AuthStore.of({LoginUser? loginUser}) {
-  //   _loginUser = loginUser;
-  // }
-
-  void setLoginUser(LoginUser loginUser) {
-    _loginUser = loginUser;
+  Future<void> setLoginUser() async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    final accessJwt = sharedPreferences.getString("accessJwt");
+    if (accessJwt == null || JwtDecoder.isExpired(accessJwt)) {
+      sharedPreferences.remove("accessJwt");
+      sharedPreferences.remove("refreshJwt");
+      _loginUser = null;
+      return;
+    }
+    final Map<String, dynamic> decodedToken = JwtDecoder.decode(accessJwt);
+    _loginUser = LoginUser(
+      username: decodedToken["username"] as String,
+      simpleDescription: decodedToken["simpleDescription"] as String?,
+      profileImage: decodedToken["profileImage"] as String,
+      roleList: [...decodedToken["roleList"]],
+    );
     notifyListeners();
   }
 
-  void logout() {
+  void logout() async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.remove("accessJwt");
+    sharedPreferences.remove("refreshJwt");
     _loginUser = null;
     notifyListeners();
   }
@@ -35,7 +42,7 @@ class AuthStore extends ChangeNotifier {
 
 class LoginUser {
   final String username;
-  final String simpleDescription;
+  final String? simpleDescription;
   final String profileImage;
   final List<String> roleList;
 

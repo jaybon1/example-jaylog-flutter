@@ -4,7 +4,9 @@ import 'package:jaylog/model/auth/dto/req/req_auth_post_refresh_dto.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomFetch {
-  static final Dio dio = Dio()
+  static final Dio dio = Dio()..options.baseUrl = Constant.baseUrl;
+
+  static final Dio dioWithJwt = Dio()
     ..options.baseUrl = Constant.baseUrl
     ..interceptors.add(CustomDioInterceptor());
 
@@ -28,8 +30,6 @@ class CustomFetch {
 }
 
 class CustomDioInterceptor extends Interceptor {
-  final Dio _dio = Dio();
-
   @override
   void onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
@@ -51,15 +51,15 @@ class CustomDioInterceptor extends Interceptor {
       if (refreshJwt == null) {
         handler.reject(err);
         return;
-        // return handler.reject(err);
       }
       try {
-        Response responseOfRefresh =
-            await _dio.post('${Constant.baseUrl}/auth/refresh',
-                data: ReqAuthPostRefreshDTO.of(refreshJwt: refreshJwt),
-                options: Options(
-                  contentType: Headers.jsonContentType,
-                ));
+        Response responseOfRefresh = await CustomFetch.dio.post(
+          '/auth/refresh',
+          data: ReqAuthPostRefreshDTO.of(refreshJwt: refreshJwt).toMap(),
+          options: Options(
+            contentType: Headers.jsonContentType,
+          ),
+        );
         if (responseOfRefresh.statusCode == 200) {
           sharedPreferences.setString(
               "accessJwt", responseOfRefresh.data['data']['accessJwt']);
@@ -68,25 +68,24 @@ class CustomDioInterceptor extends Interceptor {
           final RequestOptions requestOptions = err.requestOptions;
           requestOptions.headers['Authorization'] =
               'Bearer ${responseOfRefresh.data['data']['accessJwt']}';
-          final responseOfRetry = await _dio.request(
-            requestOptions.path,
-            options: Options(
-              method: requestOptions.method,
-              headers: requestOptions.headers,
-            ),
-            data: requestOptions.data,
-            queryParameters: requestOptions.queryParameters,
-          );
+          // final responseOfRetry = await CustomFetch.dio.request(
+          //   requestOptions.path,
+          //   options: Options(
+          //     method: requestOptions.method,
+          //     headers: requestOptions.headers,
+          //   ),
+          //   data: requestOptions.data,
+          //   queryParameters: requestOptions.queryParameters,
+          // );
+          final responseOfRetry = await CustomFetch.dio.fetch(requestOptions);
           handler.resolve(responseOfRetry);
-          // return handler.resolve(responseOfRetry);
+          return;
         }
       } catch (e) {
         sharedPreferences.remove("accessJwt");
         sharedPreferences.remove("refreshJwt");
-        // authStore 로그아웃 처리
         handler.reject(err);
         return;
-        // return handler.reject(err);
       }
     } else {
       super.onError(err, handler);

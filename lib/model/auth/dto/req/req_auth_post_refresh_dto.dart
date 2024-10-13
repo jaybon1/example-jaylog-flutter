@@ -8,4 +8,10 @@ class ReqAuthPostRefreshDTO {
       refreshJwt: refreshJwt,
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'refreshJwt': refreshJwt,
+    };
+  }
 }

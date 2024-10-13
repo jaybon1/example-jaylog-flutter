@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jaylog/model/my/repository/my_repository.dart';
@@ -17,23 +15,29 @@ class _MyViewModel extends ChangeNotifier {
 
   List<_Article>? get likeArticleList => _likeArticleList;
 
-  void get() {
-    MyRepository.get().then((response) {
-      final data = response.data["data"];
-      _myArticleList = List<_Article>.from(
-          data['myArticleList'].map((x) => _Article.fromMap(x)));
-      _likeArticleList = List<_Article>.from(
-          data['likeArticleList'].map((x) => _Article.fromMap(x)));
+  void get({
+    Function onError = UtilFunction.handleDefaultError,
+  }) async {
+    try {
+      final response = await MyRepository.get();
+      final resDTO = response.data;
+      _myArticleList = List<_Article>.from(resDTO['data']['myArticleList']
+          .map((thisArticle) => _Article.fromMap(thisArticle)));
+      _likeArticleList = List<_Article>.from(resDTO['data']['likeArticleList']
+          .map((thisArticle) => _Article.fromMap(thisArticle)));
+    } on Exception catch (e, stackTrace) {
+      onError(e, stackTrace);
+    } finally {
       notifyListeners();
-    }).onError(UtilFunction.handleDefaultError);
+    }
   }
 }
 
 class _Article {
-  final int id;
+  final BigInt id;
   final _Writer writer;
   final String title;
-  final String thumbnail;
+  final String? thumbnail;
   final String summary;
   final int likeCount;
   final bool isLikeClicked;
@@ -52,7 +56,7 @@ class _Article {
 
   factory _Article.fromMap(dynamic jsonMap) {
     return _Article(
-      id: jsonMap['id'],
+      id: BigInt.from(jsonMap['id']),
       writer: _Writer.fromMap(jsonMap['writer']),
       title: jsonMap['title'],
       thumbnail: jsonMap['thumbnail'],

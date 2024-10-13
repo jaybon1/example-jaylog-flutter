@@ -46,10 +46,14 @@ class MyInfoPage extends HookConsumerWidget {
                         onTap: () {
                           Future<void> temp() async {
                             final imagePicker = ImagePicker();
-                            final xfile = await imagePicker.pickImage(source: ImageSource.gallery);
-                            final resizedImageFile = await UtilFunction.resizeXfileImageTo50x50(xfile);
+                            final xfile = await imagePicker.pickImage(
+                                source: ImageSource.gallery);
+                            final resizedImageFile =
+                                await UtilFunction.resizeXfileImageTo50x50(
+                                    xfile);
                             profileImage.value = resizedImageFile.path;
                           }
+
                           temp();
 
                           // final imagePicker = ImagePicker();

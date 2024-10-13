@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jaylog/store/auth_store.dart';
+import 'package:jaylog/util/util_function.dart';
 import 'package:jaylog/view/_component/common/article_card.dart';
 import 'package:jaylog/view/_component/common/circle_profile_image.dart';
+import 'package:jaylog/viewmodel/my/my_view_model.dart';
 
 import '../_component/layout/default_layout.dart';
 
@@ -12,9 +15,32 @@ class MyPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final authStoreState = ref.watch(authStoreGlobal);
+    final myViewModelState = ref.watch(myViewModelGlobal);
+    final loginUser = useMemoized(() {
+      return authStoreState.loginUser;
+    }, [authStoreState.loginUser]);
+
     final tabController = useTabController(initialLength: 2);
 
     useListenable(tabController);
+
+    useEffect(() {
+      if (loginUser == null) {
+        UtilFunction.alert(
+          context: context,
+          content: "잘못된 접근입니다.",
+        );
+        GoRouter.of(context).go('/');
+        return;
+      }
+      myViewModelState.get();
+      return null;
+    }, []);
+
+    if (loginUser == null) {
+      return const SizedBox();
+    }
 
     return DefaultLayout(
       body: ListView(
@@ -24,17 +50,17 @@ class MyPage extends HookConsumerWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const CircleProfileImage(
-                  imageUrl: "https://picsum.photos/50",
+                CircleProfileImage(
+                  imageUrl: loginUser.profileImage,
                   radius: 50,
                 ),
                 const Padding(padding: EdgeInsets.only(right: 10)),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      "temp1",
-                      style: TextStyle(
+                    Text(
+                      loginUser.username,
+                      style: const TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
                       ),
@@ -42,8 +68,8 @@ class MyPage extends HookConsumerWidget {
                     const Padding(padding: EdgeInsets.only(bottom: 10)),
                     SizedBox(
                       width: 160,
-                      child: const Text(
-                        "간단한 자기소개 입니다. 설레이는 이 마음은 뭘까",
+                      child: Text(
+                        loginUser.simpleDescription ?? "한 줄 소개가 없습니다.",
                         style: TextStyle(color: Colors.grey),
                       ),
                     ),
@@ -58,18 +84,6 @@ class MyPage extends HookConsumerWidget {
                         foregroundColor: Colors.green,
                       ),
                     ),
-                    // InkWell(
-                    //   onTap: () {
-                    //     GoRouter.of(context).push("/my/info");
-                    //   },
-                    //   child: const Text(
-                    //     "내 정보 수정",
-                    //     style: TextStyle(
-                    //       color: Colors.green,
-                    //       decoration: TextDecoration.underline,
-                    //     ),
-                    //   ),
-                    // )
                   ],
                 ),
               ],
@@ -87,9 +101,36 @@ class MyPage extends HookConsumerWidget {
             ],
           ),
           ...tabController.index == 0
-              ? [ArticleCard(), ArticleCard()]
-              : [ArticleCard()],
-          // ...[1,2,3,4].map((e) => ArticleCard()).toList(),
+              ? myViewModelState.myArticleList
+                      ?.map((thisArticle) => ArticleCard(
+                            key: ValueKey(thisArticle.id),
+                            id: thisArticle.id,
+                            username: thisArticle.writer.username,
+                            profileImage: thisArticle.writer.profileImage,
+                            title: thisArticle.title,
+                            thumbnail: thisArticle.thumbnail,
+                            summary: thisArticle.summary,
+                            likeCount: thisArticle.likeCount,
+                            isLikeClicked: thisArticle.isLikeClicked,
+                            createDate: thisArticle.createDate,
+                          ))
+                      .toList() ??
+                  []
+              : myViewModelState.likeArticleList
+                      ?.map((thisArticle) => ArticleCard(
+                            key: ValueKey(thisArticle.id),
+                            id: thisArticle.id,
+                            username: thisArticle.writer.username,
+                            profileImage: thisArticle.writer.profileImage,
+                            title: thisArticle.title,
+                            thumbnail: thisArticle.thumbnail,
+                            summary: thisArticle.summary,
+                            likeCount: thisArticle.likeCount,
+                            isLikeClicked: thisArticle.isLikeClicked,
+                            createDate: thisArticle.createDate,
+                          ))
+                      .toList() ??
+                  [],
         ],
       ),
     );

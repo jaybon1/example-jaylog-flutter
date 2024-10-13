@@ -3,13 +3,23 @@ class ReqAuthPostLoginDTO {
 
   ReqAuthPostLoginDTO._({required this.user});
 
-  factory ReqAuthPostLoginDTO.of({required String username, required String password}) {
+  factory ReqAuthPostLoginDTO.of(
+      {required String username, required String password}) {
     return ReqAuthPostLoginDTO._(
       user: _User(
         username: username,
         password: password,
       ),
     );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'user': {
+        'username': user.username,
+        'password': user.password,
+      },
+    };
   }
 }
 

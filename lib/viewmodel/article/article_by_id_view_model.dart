@@ -60,7 +60,7 @@ class _Article {
   final int id;
   final _Writer writer;
   final String title;
-  final String thumbnail;
+  final String? thumbnail;
   final String content;
   final int likeCount;
   final bool isLikeClicked;

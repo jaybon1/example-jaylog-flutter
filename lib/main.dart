@@ -1,31 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jaylog/store/auth_store.dart';
 import 'package:jaylog/view/article/byid/article_by_id_page.dart';
 import 'package:jaylog/view/article/edit/article_edit_page.dart';
 import 'package:jaylog/view/article/write/article_write_page.dart';
 import 'package:jaylog/view/auth/join/auth_join_page.dart';
 import 'package:jaylog/view/auth/login/auth_login_page.dart';
 import 'package:jaylog/view/main/main_page.dart';
-import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:jaylog/view/my/info/my_info_page.dart';
 import 'package:jaylog/view/my/my_page.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   usePathUrlStrategy();
   runApp(
     const ProviderScope(
       child: MyApp(),
-    )
+    ),
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends HookConsumerWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authStoreState = ref.watch(authStoreGlobal);
+
+    useEffect(() {
+      authStoreState.setLoginUser();
+      return null;
+    }, []);
+
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       routerConfig: _router,
@@ -34,6 +44,7 @@ class MyApp extends StatelessWidget {
 }
 
 final GoRouter _router = GoRouter(
+  navigatorKey: navigatorKey,
   initialLocation: "/",
   routes: [
     GoRoute(
@@ -82,7 +93,10 @@ final GoRouter _router = GoRouter(
         GoRoute(
           path: ":id",
           builder: (BuildContext context, GoRouterState state) {
-            return const ArticleByIdPage();
+            final id = state.pathParameters["id"];
+            return ArticleByIdPage(
+              id: BigInt.parse(id!),
+            );
           },
           routes: [
             GoRoute(

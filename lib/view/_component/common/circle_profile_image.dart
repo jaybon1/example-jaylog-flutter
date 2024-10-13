@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jaylog/util/util_function.dart';
 
 class CircleProfileImage extends StatelessWidget {
-  final String imageUrl;
+  final String? imageUrl;
   final double radius;
 
   const CircleProfileImage(

@@ -4,7 +4,28 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jaylog/view/_component/common/circle_profile_image.dart';
 
 class ArticleCard extends HookConsumerWidget {
-  const ArticleCard({super.key});
+  final BigInt id;
+  final String username;
+  final String profileImage;
+  final String title;
+  final String? thumbnail;
+  final String summary;
+  final int likeCount;
+  final bool isLikeClicked;
+  final DateTime createDate;
+
+  const ArticleCard({
+    super.key,
+    required this.id,
+    required this.username,
+    required this.profileImage,
+    required this.title,
+    required this.thumbnail,
+    required this.summary,
+    required this.likeCount,
+    required this.isLikeClicked,
+    required this.createDate,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -24,18 +45,19 @@ class ArticleCard extends HookConsumerWidget {
           color: Colors.white,
           child: Column(
             children: [
-              Image.asset(
-                "asset/image/no-image.png",
-                fit: BoxFit.cover,
-                width: double.infinity,
-                height: 150,
-              ),
-              // Image.network(
-              //   "asset/image/no-image.png",
-              //   fit: BoxFit.cover,
-              //   width: double.infinity,
-              //   height: 150,
-              // ),
+              thumbnail == null
+                  ? Image.asset(
+                      "asset/image/no-image.png",
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: 150,
+                    )
+                  : Image.network(
+                      thumbnail!,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: 150,
+                    ),
               ListTile(
                 titleTextStyle: const TextStyle(
                   fontSize: 20,
@@ -45,32 +67,32 @@ class ArticleCard extends HookConsumerWidget {
                   padding: const EdgeInsets.only(top: 5, bottom: 5),
                   child: InkWell(
                     onTap: () {
-                      GoRouter.of(context).push("/article/1");
+                      GoRouter.of(context).push("/article/$id");
                     },
-                    child: const Text(
-                      "[번역] Node.js 개요: 아키텍처, API, 이벤트",
+                    child: Text(
+                      title,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                     ),
                   ),
                 ),
-                subtitle: const Column(
+                subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(bottom: 18),
+                      padding: const EdgeInsets.only(bottom: 18),
                       child: Text(
-                        "4.1 Node.js 플랫폼4.1.1 Node.js 전역 변수4.1.2 Node.js 내장 모듈4.1.3 Node.js 함수의 다양한 스타일4.2 Node.js 이벤트 루프4.2.1 실행을 완료하면 코드가 더 간단해집니다4.2.2 Node.js 코드가 싱글 스레드에서",
-                        style: TextStyle(fontSize: 16),
+                        summary,
+                        style: const TextStyle(fontSize: 16),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 4,
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(bottom: 15),
+                      padding: const EdgeInsets.only(bottom: 15),
                       child: Text(
-                        "2024-10-01T19:18:27.565936",
-                        style: TextStyle(color: Colors.grey),
+                        createDate.toString(),
+                        style: const TextStyle(color: Colors.grey),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                       ),
@@ -81,21 +103,21 @@ class ArticleCard extends HookConsumerWidget {
               const Divider(
                 height: 1,
               ),
-              const ListTile(
+              ListTile(
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
                         CircleProfileImage(
-                          imageUrl: "https://picsum.photos/50",
+                          imageUrl: profileImage,
                           radius: 15,
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 5),
+                          padding: const EdgeInsets.only(left: 5),
                           child: Text(
-                            "temp1",
-                            style: TextStyle(
+                            username,
+                            style: const TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -105,10 +127,20 @@ class ArticleCard extends HookConsumerWidget {
                     Row(
                       children: [
                         // Icon(Icons.favorite_border),
-                        Icon(Icons.favorite, color: Colors.red,),
+                        isLikeClicked
+                            ? const Icon(
+                                Icons.favorite,
+                                color: Colors.red,
+                              )
+                            : const Icon(
+                                Icons.favorite_border,
+                                color: Colors.grey,
+                              ),
                         Padding(
                           padding: EdgeInsets.only(left: 5),
-                          child: Text("0"),
+                          child: Text(
+                            likeCount.toString(),
+                          ),
                         )
                       ],
                     ),
