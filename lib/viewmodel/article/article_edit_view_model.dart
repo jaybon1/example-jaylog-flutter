@@ -51,7 +51,7 @@ class _ArticleEditViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
-  
+
 }
 
 class _Article {

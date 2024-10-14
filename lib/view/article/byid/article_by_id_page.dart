@@ -164,28 +164,38 @@ class ArticleByIdPage extends HookConsumerWidget {
                         ),
                         const Padding(padding: EdgeInsets.only(right: 10)),
                         ArticleButton(
-                          child: Text("삭제"),
                           color: Colors.red,
-                          onPressed: () async {
-                            final isDelete = await UtilFunction.confirm(
-                              context: context,
-                              content: "정말로 삭제하시겠습니까?",
-                            );
-                            if (isDelete) {
-                              articleByIdViewModelState.delete(
-                                id: id,
-                                onSuccess: (message) {
-                                  UtilFunction.alert(
+                          onPressed: articleByIdViewModelState.isPendingDelete
+                              ? null
+                              : () async {
+                                  final isDelete = await UtilFunction.confirm(
                                     context: context,
-                                    content: message,
-                                    callback: () {
-                                      GoRouter.of(context).pop();
-                                    },
+                                    content: "정말로 삭제하시겠습니까?",
                                   );
+                                  if (isDelete) {
+                                    articleByIdViewModelState.delete(
+                                      id: id,
+                                      onSuccess: (message) {
+                                        UtilFunction.alert(
+                                          context: context,
+                                          content: message,
+                                          callback: () {
+                                            GoRouter.of(context).pop();
+                                          },
+                                        );
+                                      },
+                                    );
+                                  }
                                 },
-                              );
-                            }
-                          },
+                          child: articleByIdViewModelState.isPendingDelete
+                              ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 3,
+                                  ),
+                                )
+                              : const Text("삭제"),
                         ),
                       ],
               ),
