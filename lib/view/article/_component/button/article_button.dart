@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ArticleButton extends HookConsumerWidget {
-  final String text;
+  final Widget child;
   final VoidCallback? onPressed;
   final Color? color;
 
   const ArticleButton({
     super.key,
-    required this.text,
+    required this.child,
     this.onPressed,
     this.color = Colors.grey,
   });
@@ -25,7 +25,7 @@ class ArticleButton extends HookConsumerWidget {
         ),
       ),
       onPressed: onPressed,
-      child: Text(text),
+      child: child,
     );
   }
 }

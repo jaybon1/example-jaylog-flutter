@@ -29,6 +29,7 @@ class MyApp extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
     final authStoreState = ref.watch(authStoreGlobal);
 
     useEffect(() {
@@ -50,7 +51,7 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: "/",
       builder: (BuildContext context, GoRouterState state) {
-        return const MainPage();
+        return MainPage(key: UniqueKey(),);
       },
     ),
     GoRoute(
@@ -102,7 +103,10 @@ final GoRouter _router = GoRouter(
             GoRoute(
               path: "edit",
               builder: (BuildContext context, GoRouterState state) {
-                return const ArticleEditPage();
+                final id = state.pathParameters["id"];
+                return ArticleEditPage(
+                  id: BigInt.parse(id!),
+                );
               },
             ),
           ],
@@ -112,7 +116,7 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: "/my",
       builder: (BuildContext context, GoRouterState state) {
-        return const MyPage();
+        return MyPage(key: UniqueKey(),);
       },
       routes: [
         GoRoute(

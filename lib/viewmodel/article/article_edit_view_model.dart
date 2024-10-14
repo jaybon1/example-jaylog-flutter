@@ -14,29 +14,51 @@ class _ArticleEditViewModel extends ChangeNotifier {
   bool _isPendingPut = false;
 
   _Article? get article => _article;
-
   bool get isPendingPut => _isPendingPut;
 
-  void put(BigInt id, ReqArticlePutDTO reqArticlePutDTO) {
+  Future<void> get({
+    required BigInt id,
+    onError = UtilFunction.handleDefaultError,
+  }) async {
+    try {
+      final response = await ArticleRepository.get(id);
+      final resDTO = response.data;
+      print(resDTO);
+      _article = _Article.fromMap(resDTO["data"]["article"]);
+    } on Exception catch (e, stackTrace) {
+      onError(e, stackTrace);
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  Future<void> put({
+    required BigInt id,
+    required ReqArticlePutDTO reqArticlePutDTO,
+    required Function onSuccess,
+    Function onError = UtilFunction.handleDefaultError,
+  }) async {
     _isPendingPut = true;
     notifyListeners();
-    ArticleRepository.put(id, reqArticlePutDTO)
-        .then((response) {
-          // 성공 시 처리
-        })
-        .onError(UtilFunction.handleDefaultError)
-        .whenComplete(() {
-          _isPendingPut = false;
-          notifyListeners();
-        });
+    try {
+      final response = await ArticleRepository.put(id, reqArticlePutDTO);
+      final resDTO = response.data;
+      onSuccess(resDTO["message"]);
+    } on Exception catch (e, stackTrace) {
+      onError(e, stackTrace);
+    } finally {
+      _isPendingPut = false;
+      notifyListeners();
+    }
   }
+  
 }
 
 class _Article {
-  final int id;
+  final BigInt id;
   final _Writer writer;
   final String title;
-  final String thumbnail;
+  final String? thumbnail;
   final String content;
   final int likeCount;
   final bool isLikeClicked;
@@ -55,7 +77,7 @@ class _Article {
 
   factory _Article.fromMap(dynamic jsonMap) {
     return _Article(
-      id: jsonMap['id'],
+      id: BigInt.from(jsonMap['id']),
       writer: _Writer.fromMap(jsonMap['writer']),
       title: jsonMap['title'],
       thumbnail: jsonMap['thumbnail'],

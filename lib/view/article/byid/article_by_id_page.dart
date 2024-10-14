@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jaylog/common/constant/constant.dart';
 import 'package:jaylog/store/auth_store.dart';
+import 'package:jaylog/util/util_function.dart';
 import 'package:jaylog/view/_component/common/circle_profile_image.dart';
 import 'package:jaylog/view/_component/common/widget_placeholder.dart';
 import 'package:jaylog/view/_component/layout/default_layout.dart';
@@ -23,16 +24,15 @@ class ArticleByIdPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final authStoreState = ref.watch(authStoreGlobal);
     final articleByIdViewModelState = ref.watch(articleByIdViewModelLocal);
-    final article = useMemoized(() {
-      return articleByIdViewModelState.article;
-    }, [articleByIdViewModelState.article]);
 
     useEffect(() {
-      articleByIdViewModelState.get(id);
+      articleByIdViewModelState.get(
+        id: id,
+      );
       return null;
     }, []);
 
-    if (article == null) {
+    if (articleByIdViewModelState.article == null) {
       return DefaultLayout(
         body: SingleChildScrollView(
           child: Padding(
@@ -121,7 +121,7 @@ class ArticleByIdPage extends HookConsumerWidget {
           child: Column(
             children: [
               Text(
-                article.title,
+                articleByIdViewModelState.article!.title,
                 style: const TextStyle(
                   fontSize: 32,
                 ),
@@ -130,18 +130,19 @@ class ArticleByIdPage extends HookConsumerWidget {
               Row(
                 children: [
                   CircleProfileImage(
-                    imageUrl: article.writer.profileImage,
+                    imageUrl:
+                        articleByIdViewModelState.article!.writer.profileImage,
                   ),
                   const Padding(padding: EdgeInsets.only(right: 10)),
                   Text(
-                    article.writer.username,
+                    articleByIdViewModelState.article!.writer.username,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const Padding(padding: EdgeInsets.only(right: 10)),
                   Text(
-                    article.createDate.toString(),
+                    articleByIdViewModelState.article!.createDate.toString(),
                     style: const TextStyle(color: Colors.grey),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
@@ -151,27 +152,46 @@ class ArticleByIdPage extends HookConsumerWidget {
               const Padding(padding: EdgeInsets.only(bottom: 15)),
               Row(
                 children: authStoreState.loginUser?.username !=
-                        article.writer.username
+                        articleByIdViewModelState.article!.writer.username
                     ? []
                     : [
                         ArticleButton(
-                          text: "수정",
+                          child: const Text("수정"),
                           color: Colors.green,
                           onPressed: () {
-                            GoRouter.of(context).push("/article/1/edit");
+                            GoRouter.of(context).push("/article/$id/edit");
                           },
                         ),
                         const Padding(padding: EdgeInsets.only(right: 10)),
                         ArticleButton(
-                          text: "삭제",
+                          child: Text("삭제"),
                           color: Colors.red,
-                          onPressed: () {},
+                          onPressed: () async {
+                            final isDelete = await UtilFunction.confirm(
+                              context: context,
+                              content: "정말로 삭제하시겠습니까?",
+                            );
+                            if (isDelete) {
+                              articleByIdViewModelState.delete(
+                                id: id,
+                                onSuccess: (message) {
+                                  UtilFunction.alert(
+                                    context: context,
+                                    content: message,
+                                    callback: () {
+                                      GoRouter.of(context).pop();
+                                    },
+                                  );
+                                },
+                              );
+                            }
+                          },
                         ),
                       ],
               ),
               const Padding(padding: EdgeInsets.only(bottom: 15)),
               MarkdownBody(
-                data: article.content,
+                data: articleByIdViewModelState.article!.content,
               ),
               const Padding(padding: EdgeInsets.only(bottom: 15)),
               Center(

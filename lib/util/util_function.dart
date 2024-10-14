@@ -9,6 +9,44 @@ import 'package:jaylog/common/constant/constant.dart';
 import 'package:jaylog/main.dart';
 
 class UtilFunction {
+  static Future<bool> confirm({
+    required BuildContext context,
+    required String content,
+  }) async {
+    bool result = false;
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return PopScope(
+          canPop: false,
+          child: AlertDialog(
+            content: Text(content),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  result = true;
+                  Navigator.pop(context);
+                  FocusScope.of(context).unfocus();
+                },
+                child: Text("확인"),
+              ),
+              TextButton(
+                onPressed: () {
+                  result = false;
+                  Navigator.pop(context);
+                  FocusScope.of(context).unfocus();
+                },
+                child: Text("취소"),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+    return result;
+  }
+
   static void alert({
     required BuildContext context,
     required String content,

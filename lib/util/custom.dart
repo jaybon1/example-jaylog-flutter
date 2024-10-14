@@ -54,7 +54,7 @@ class CustomDioInterceptor extends Interceptor {
       }
       try {
         Response responseOfRefresh = await CustomFetch.dio.post(
-          '/auth/refresh',
+          '/v1/auth/refresh',
           data: ReqAuthPostRefreshDTO.of(refreshJwt: refreshJwt).toMap(),
           options: Options(
             contentType: Headers.jsonContentType,

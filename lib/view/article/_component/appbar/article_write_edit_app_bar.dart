@@ -22,7 +22,7 @@ class WriteEditAppBar extends HookConsumerWidget
       title: InkWell(
         onTap: () {
           if (goRouterState.fullPath != "/") {
-            GoRouter.of(context).push("/");
+            GoRouter.of(context).go("/");
           }
         },
         child: const Padding(

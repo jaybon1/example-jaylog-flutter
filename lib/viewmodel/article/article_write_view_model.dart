@@ -14,17 +14,22 @@ class _ArticleWriteViewModel extends ChangeNotifier {
 
   bool get isPendingPost => _isPendingPost;
 
-  void post(ReqArticlePostDTO reqArticlePostDTO) {
+  Future<void> post({
+    required ReqArticlePostDTO reqArticlePostDTO,
+    required Function onSuccess,
+    Function onError = UtilFunction.handleDefaultError,
+  }) async {
     _isPendingPost = true;
     notifyListeners();
-    ArticleRepository.post(reqArticlePostDTO)
-        .then((response) {
-          // 성공 시 처리
-        })
-        .onError(UtilFunction.handleDefaultError)
-        .whenComplete(() {
-          _isPendingPost = false;
-          notifyListeners();
-        });
+    try {
+      final response = await ArticleRepository.post(reqArticlePostDTO);
+      final resDTO = response.data;
+      onSuccess(resDTO["message"]);
+    } on Exception catch (e, stackTrace) {
+      onError(e, stackTrace);
+    } finally {
+      _isPendingPost = false;
+      notifyListeners();
+    }
   }
 }

@@ -19,26 +19,38 @@ class _ArticleByIdViewModel extends ChangeNotifier {
 
   bool get isPendingPostLike => _isPendingPostLike;
 
-  void get(BigInt id) {
-    ArticleRepository.get(id).then((response) {
-      final data = response.data["data"];
-      _article = _Article.fromMap(data['article']);
+  void get({
+    required BigInt id,
+    onError = UtilFunction.handleDefaultError,
+  }) async {
+    try {
+      final response = await ArticleRepository.get(id);
+      final resDTO = response.data;
+      _article = _Article.fromMap(resDTO["data"]["article"]);
+    } on Exception catch (e, stackTrace) {
+      onError(e, stackTrace);
+    } finally {
       notifyListeners();
-    }).onError(UtilFunction.handleDefaultError);
+    }
   }
 
-  void delete(BigInt id) {
+  Future<void> delete({
+    required BigInt id,
+    required Function onSuccess,
+    onError = UtilFunction.handleDefaultError,
+  }) async {
     _isPendingDelete = true;
     notifyListeners();
-    ArticleRepository.delete(id)
-        .then((response) {
-          // 성공 시 처리
-        })
-        .onError(UtilFunction.handleDefaultError)
-        .whenComplete(() {
-          _isPendingDelete = false;
-          notifyListeners();
-        });
+    try {
+      final response = await ArticleRepository.delete(id);
+      final resDTO = response.data;
+      onSuccess(resDTO["message"]);
+    } on Exception catch (e, stackTrace) {
+      onError(e, stackTrace);
+    } finally {
+      _isPendingDelete = false;
+      notifyListeners();
+    }
   }
 
   void postLike(BigInt id) {

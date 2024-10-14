@@ -11,12 +11,18 @@ class MainPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final appLifeCycleState = useAppLifecycleState();
+
     final searchStoreState = ref.watch(searchStoreGlobal);
     final mainViewModelState = ref.watch(mainViewModelGlobal);
 
     useEffect(() {
-      mainViewModelState.get(searchValue: searchStoreState.searchValue);
-    }, [searchStoreState.searchValue]);
+      print('mainViewModelState.get()' + appLifeCycleState.toString());
+      if (appLifeCycleState == AppLifecycleState.resumed) {
+        mainViewModelState.get(searchValue: searchStoreState.searchValue);
+      }
+      return null;
+    }, [searchStoreState.searchValue, appLifeCycleState]);
 
     return DefaultLayout(
       body: ListView(

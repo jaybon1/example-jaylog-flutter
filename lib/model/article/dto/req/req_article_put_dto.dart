@@ -16,6 +16,12 @@ class ReqArticlePutDTO {
       ),
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'article': article.toMap(),
+    };
+  }
 }
 
 class _Article {
@@ -26,4 +32,11 @@ class _Article {
     required this.title,
     required this.content,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'title': title,
+      'content': content,
+    };
+  }
 }

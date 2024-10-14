@@ -11,13 +11,18 @@ class ArticleRepository {
   }
 
   static Future<Response> post(ReqArticlePostDTO reqArticlePostDTO) async {
-    return await CustomFetch.dioWithJwt.post("$_url", data: reqArticlePostDTO);
+    return await CustomFetch.dioWithJwt.post(
+      _url,
+      data: reqArticlePostDTO.toMap(),
+    );
   }
 
   static Future<Response> put(
       BigInt id, ReqArticlePutDTO reqArticlePutDTO) async {
-    return await CustomFetch.dioWithJwt
-        .put("$_url/$id", data: reqArticlePutDTO);
+    return await CustomFetch.dioWithJwt.put(
+      "$_url/$id",
+      data: reqArticlePutDTO.toMap(),
+    );
   }
 
   static Future<Response> delete(BigInt id) async {

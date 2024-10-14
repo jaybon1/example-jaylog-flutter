@@ -15,6 +15,9 @@ class MyPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
+    final appLifeCycleState = useAppLifecycleState();
+
     final authStoreState = ref.watch(authStoreGlobal);
     final myViewModelState = ref.watch(myViewModelGlobal);
     final loginUser = useMemoized(() {
@@ -34,9 +37,12 @@ class MyPage extends HookConsumerWidget {
         GoRouter.of(context).go('/');
         return;
       }
-      myViewModelState.get();
+      print('myViewModelState.get()' + appLifeCycleState.toString());
+      if (appLifeCycleState == AppLifecycleState.resumed) {
+        myViewModelState.get();
+      }
       return null;
-    }, []);
+    }, [appLifeCycleState]);
 
     if (loginUser == null) {
       return const SizedBox();
