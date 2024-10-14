@@ -4,8 +4,7 @@ import 'package:jaylog/model/article/dto/req/req_article_put_dto.dart';
 import 'package:jaylog/model/article/repository/article_repository.dart';
 import 'package:jaylog/util/util_function.dart';
 
-final articleEditViewModelLocal =
-    ChangeNotifierProvider.autoDispose<_ArticleEditViewModel>((ref) {
+final articleEditViewModelLocal = ChangeNotifierProvider.autoDispose<_ArticleEditViewModel>((ref) {
   return _ArticleEditViewModel();
 });
 

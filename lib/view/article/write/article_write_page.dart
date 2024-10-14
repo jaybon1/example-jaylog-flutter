@@ -103,14 +103,12 @@ class ArticleWritePage extends HookConsumerWidget {
                               );
                               return;
                             }
-                            final sharedPreferences =
-                                await SharedPreferences.getInstance();
+                            final sharedPreferences = await SharedPreferences.getInstance();
                             final tempArticle = {
                               "title": titleTextEditingController.text,
                               "content": markdownTextEditingController.text,
                             };
-                            sharedPreferences.setString(
-                                "tempArticle", jsonEncode(tempArticle));
+                            sharedPreferences.setString("tempArticle", jsonEncode(tempArticle));
                             UtilFunction.alert(
                               context: context,
                               content: "임시저장되었습니다.",
@@ -129,8 +127,7 @@ class ArticleWritePage extends HookConsumerWidget {
                                     );
                                     return;
                                   }
-                                  if (markdownTextEditingController
-                                      .text.isEmpty) {
+                                  if (markdownTextEditingController.text.isEmpty) {
                                     UtilFunction.alert(
                                       context: context,
                                       content: "내용을 입력하세요.",
@@ -140,19 +137,15 @@ class ArticleWritePage extends HookConsumerWidget {
                                   await articleWriteViewModelState.post(
                                     reqArticlePostDTO: ReqArticlePostDTO.of(
                                       title: titleTextEditingController.text,
-                                      content:
-                                          markdownTextEditingController.text,
+                                      content: markdownTextEditingController.text,
                                     ),
                                     onSuccess: (String message) async {
                                       UtilFunction.alert(
                                         context: context,
                                         content: message,
                                         callback: () async {
-                                          final sharedPreferences =
-                                              await SharedPreferences
-                                                  .getInstance();
-                                          sharedPreferences
-                                              .remove("tempArticle");
+                                          final sharedPreferences = await SharedPreferences.getInstance();
+                                          sharedPreferences.remove("tempArticle");
                                           GoRouter.of(context).go("/");
                                         },
                                       );

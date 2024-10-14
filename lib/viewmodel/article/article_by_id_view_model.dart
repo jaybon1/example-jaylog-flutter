@@ -3,8 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jaylog/model/article/repository/article_repository.dart';
 import 'package:jaylog/util/util_function.dart';
 
-final articleByIdViewModelLocal =
-    ChangeNotifierProvider.autoDispose<_ArticleByIdViewModel>((ref) {
+final articleByIdViewModelLocal = ChangeNotifierProvider.autoDispose<_ArticleByIdViewModel>((ref) {
   return _ArticleByIdViewModel();
 });
 

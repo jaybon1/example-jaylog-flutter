@@ -19,16 +19,13 @@ class MyPage extends HookConsumerWidget {
 
     final authStoreState = ref.watch(authStoreGlobal);
     final myViewModelState = ref.watch(myViewModelGlobal);
-    final loginUser = useMemoized(() {
-      return authStoreState.loginUser;
-    }, [authStoreState.loginUser]);
 
     final tabController = useTabController(initialLength: 2);
 
     useListenable(tabController);
 
     useEffect(() {
-      if (loginUser == null) {
+      if (authStoreState.loginUser == null) {
         UtilFunction.alert(
           context: context,
           content: "잘못된 접근입니다.",
@@ -36,15 +33,18 @@ class MyPage extends HookConsumerWidget {
         GoRouter.of(context).go('/');
         return;
       }
-      print('myViewModelState.get()' + appLifeCycleState.toString());
       if (appLifeCycleState == AppLifecycleState.resumed) {
         myViewModelState.get();
       }
       return null;
     }, [appLifeCycleState]);
 
-    if (loginUser == null) {
-      return const SizedBox();
+    if (authStoreState.loginUser == null) {
+      return const DefaultLayout(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
     }
 
     return DefaultLayout(
@@ -56,7 +56,7 @@ class MyPage extends HookConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CircleProfileImage(
-                  imageUrl: loginUser.profileImage,
+                  imageUrl: authStoreState.loginUser!.profileImage,
                   radius: 50,
                 ),
                 const Padding(padding: EdgeInsets.only(right: 10)),
@@ -64,7 +64,7 @@ class MyPage extends HookConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      loginUser.username,
+                      authStoreState.loginUser!.username,
                       style: const TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
@@ -74,7 +74,7 @@ class MyPage extends HookConsumerWidget {
                     SizedBox(
                       width: 160,
                       child: Text(
-                        loginUser.simpleDescription ?? "한 줄 소개가 없습니다.",
+                        authStoreState.loginUser!.simpleDescription ?? "한 줄 소개가 없습니다.",
                         style: TextStyle(color: Colors.grey),
                       ),
                     ),

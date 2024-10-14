@@ -51,8 +51,7 @@ class DefaultAppBar extends HookConsumerWidget implements PreferredSizeWidget {
                         ),
                       ),
                       const Padding(padding: EdgeInsets.only(right: 15)),
-                      CircleProfileImage(
-                          imageUrl: authStoreState.loginUser?.profileImage),
+                      CircleProfileImage(imageUrl: authStoreState.loginUser?.profileImage),
                       PopupMenuButton(
                           offset: const Offset(0, 40),
                           icon: const Icon(Icons.arrow_drop_down),

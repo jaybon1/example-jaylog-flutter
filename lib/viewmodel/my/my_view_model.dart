@@ -21,10 +21,8 @@ class _MyViewModel extends ChangeNotifier {
     try {
       final response = await MyRepository.get();
       final resDTO = response.data;
-      _myArticleList = List<_Article>.from(resDTO['data']['myArticleList']
-          .map((thisArticle) => _Article.fromMap(thisArticle)));
-      _likeArticleList = List<_Article>.from(resDTO['data']['likeArticleList']
-          .map((thisArticle) => _Article.fromMap(thisArticle)));
+      _myArticleList = List<_Article>.from(resDTO['data']['myArticleList'].map((thisArticle) => _Article.fromMap(thisArticle)));
+      _likeArticleList = List<_Article>.from(resDTO['data']['likeArticleList'].map((thisArticle) => _Article.fromMap(thisArticle)));
     } on Exception catch (e, stackTrace) {
       onError(e, stackTrace);
     } finally {

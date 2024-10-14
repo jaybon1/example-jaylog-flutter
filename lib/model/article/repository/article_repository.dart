@@ -17,8 +17,7 @@ class ArticleRepository {
     );
   }
 
-  static Future<Response> put(
-      BigInt id, ReqArticlePutDTO reqArticlePutDTO) async {
+  static Future<Response> put(BigInt id, ReqArticlePutDTO reqArticlePutDTO) async {
     return await CustomFetch.dioWithJwt.put(
       "$_url/$id",
       data: reqArticlePutDTO.toMap(),

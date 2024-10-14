@@ -130,8 +130,7 @@ class ArticleByIdPage extends HookConsumerWidget {
               Row(
                 children: [
                   CircleProfileImage(
-                    imageUrl:
-                        articleByIdViewModelState.article!.writer.profileImage,
+                    imageUrl: articleByIdViewModelState.article!.writer.profileImage,
                   ),
                   const Padding(padding: EdgeInsets.only(right: 10)),
                   Text(
@@ -174,15 +173,13 @@ class ArticleByIdPage extends HookConsumerWidget {
                               ),
                         const Padding(padding: EdgeInsets.only(right: 5)),
                         Text(
-                          articleByIdViewModelState.article!.likeCount
-                              .toString(),
+                          articleByIdViewModelState.article!.likeCount.toString(),
                         ),
                       ],
                     ),
                   ),
                   Row(
-                    children: authStoreState.loginUser?.username !=
-                            articleByIdViewModelState.article!.writer.username
+                    children: authStoreState.loginUser?.username != articleByIdViewModelState.article!.writer.username
                         ? []
                         : [
                             ArticleButton(
@@ -195,30 +192,28 @@ class ArticleByIdPage extends HookConsumerWidget {
                             const Padding(padding: EdgeInsets.only(right: 10)),
                             ArticleButton(
                               color: Colors.red,
-                              onPressed:
-                                  articleByIdViewModelState.isPendingDelete
-                                      ? null
-                                      : () async {
-                                          final isDelete =
-                                              await UtilFunction.confirm(
-                                            context: context,
-                                            content: "정말로 삭제하시겠습니까?",
-                                          );
-                                          if (isDelete) {
-                                            articleByIdViewModelState.delete(
-                                              id: id,
-                                              onSuccess: (message) {
-                                                UtilFunction.alert(
-                                                  context: context,
-                                                  content: message,
-                                                  callback: () {
-                                                    GoRouter.of(context).pop();
-                                                  },
-                                                );
+                              onPressed: articleByIdViewModelState.isPendingDelete
+                                  ? null
+                                  : () async {
+                                      final isDelete = await UtilFunction.confirm(
+                                        context: context,
+                                        content: "정말로 삭제하시겠습니까?",
+                                      );
+                                      if (isDelete) {
+                                        articleByIdViewModelState.delete(
+                                          id: id,
+                                          onSuccess: (message) {
+                                            UtilFunction.alert(
+                                              context: context,
+                                              content: message,
+                                              callback: () {
+                                                GoRouter.of(context).pop();
                                               },
                                             );
-                                          }
-                                        },
+                                          },
+                                        );
+                                      }
+                                    },
                               child: articleByIdViewModelState.isPendingDelete
                                   ? const SizedBox(
                                       width: 20,

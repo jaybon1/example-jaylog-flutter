@@ -4,8 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jaylog/model/my/repository/my_repository.dart';
 import 'package:jaylog/util/util_function.dart';
 
-final myInfoViewModelLocal =
-    ChangeNotifierProvider.autoDispose<_MyInfoViewModel>((ref) {
+final myInfoViewModelLocal = ChangeNotifierProvider.autoDispose<_MyInfoViewModel>((ref) {
   return _MyInfoViewModel();
 });
 
@@ -14,17 +13,22 @@ class _MyInfoViewModel extends ChangeNotifier {
 
   bool get isPendingPutInfo => _isPendingPutInfo;
 
-  void putInfo(FormData formData) {
+  void putInfo({
+    required FormData formData,
+    required Function onSuccess,
+    Function onError = UtilFunction.handleDefaultError,
+  }) async {
     _isPendingPutInfo = true;
     notifyListeners();
-    MyRepository.putInfo(formData)
-        .then((response) {
-          // 성공 시 처리
-        })
-        .onError(UtilFunction.handleDefaultError)
-        .whenComplete(() {
-          _isPendingPutInfo = false;
-          notifyListeners();
-        });
+    try {
+      final response = await MyRepository.putInfo(formData);
+      final resDTO = response.data;
+      onSuccess(resDTO["message"]);
+    } on Exception catch (e, stackTrace) {
+      onError(e, stackTrace);
+    } finally {
+      _isPendingPutInfo = false;
+      notifyListeners();
+    }
   }
 }

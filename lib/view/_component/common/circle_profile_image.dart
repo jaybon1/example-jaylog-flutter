@@ -5,8 +5,7 @@ class CircleProfileImage extends StatelessWidget {
   final String? imageUrl;
   final double radius;
 
-  const CircleProfileImage(
-      {super.key, required this.imageUrl, this.radius = 12.0});
+  const CircleProfileImage({super.key, required this.imageUrl, this.radius = 12.0});
 
   @override
   Widget build(BuildContext context) {

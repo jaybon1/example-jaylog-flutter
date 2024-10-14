@@ -105,24 +105,22 @@ class UtilFunction {
     }
     final resizedImage = imageLib.copyResize(image, width: 50, height: 50);
     List<int> pngBytes = imageLib.encodePng(resizedImage);
-    final resizedImageFile = File(
-        '${Directory.systemTemp.path}/cropped_image${DateTime.timestamp()}.png');
+    final resizedImageFile = File('${Directory.systemTemp.path}/cropped_image${DateTime.timestamp()}.png');
     await resizedImageFile.writeAsBytes(pngBytes);
     return resizedImageFile;
   }
 
-  static FutureOr<Null> handleDefaultError(error, stackTrace) {
+  static FutureOr<Null> handleDefaultError(error, stackTrace, {BuildContext? context}) {
     print(error);
     print(stackTrace);
     if (error is DioException && error.response?.data != null) {
       alert(
-        context: navigatorKey.currentContext!,
-        content: error.response?.data["message"] ??
-            "예상치 못한 에러가 발생했습니다.\n관리자에게 문의하세요.",
+        context: context ?? navigatorKey.currentContext!,
+        content: error.response?.data["message"] ?? "예상치 못한 에러가 발생했습니다.\n관리자에게 문의하세요.",
       );
     } else {
       alert(
-        context: navigatorKey.currentContext!,
+        context: context ?? navigatorKey.currentContext!,
         content: "예상치 못한 에러가 발생했습니다.\n관리자에게 문의하세요.\n$error",
       );
     }

@@ -4,8 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jaylog/store/auth_store.dart';
 import 'package:jaylog/view/_component/common/circle_profile_image.dart';
 
-class WriteEditAppBar extends HookConsumerWidget
-    implements PreferredSizeWidget {
+class WriteEditAppBar extends HookConsumerWidget implements PreferredSizeWidget {
   const WriteEditAppBar({super.key});
 
   @override

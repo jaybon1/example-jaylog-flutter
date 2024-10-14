@@ -7,8 +7,7 @@ import 'package:jaylog/util/custom.dart';
 class AuthRepository {
   static const _url = '/v1/auth';
 
-  static Future<Response> postJoin(
-      ReqAuthPostJoinDTO reqAuthPostJoinDTO) async {
+  static Future<Response> postJoin(ReqAuthPostJoinDTO reqAuthPostJoinDTO) async {
     return await CustomFetch.dio.post(
       "$_url/join",
       data: reqAuthPostJoinDTO.toMap(),
@@ -18,8 +17,7 @@ class AuthRepository {
     );
   }
 
-  static Future<Response> postLogin(
-      ReqAuthPostLoginDTO reqAuthPostLoginDTO) async {
+  static Future<Response> postLogin(ReqAuthPostLoginDTO reqAuthPostLoginDTO) async {
     return await CustomFetch.dio.post(
       "$_url/login",
       data: reqAuthPostLoginDTO.toMap(),
@@ -29,8 +27,7 @@ class AuthRepository {
     );
   }
 
-  static Future<Response> postRefresh(
-      ReqAuthPostRefreshDTO reqAuthPostRefreshDTO) async {
+  static Future<Response> postRefresh(ReqAuthPostRefreshDTO reqAuthPostRefreshDTO) async {
     return await CustomFetch.dio.post(
       "$_url/refresh",
       data: reqAuthPostRefreshDTO.toMap(),

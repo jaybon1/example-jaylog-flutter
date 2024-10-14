@@ -3,10 +3,7 @@ class ReqAuthPostJoinDTO {
 
   ReqAuthPostJoinDTO._({required this.user});
 
-  factory ReqAuthPostJoinDTO.of(
-      {required String username,
-      required String password,
-      String? simpleDescription}) {
+  factory ReqAuthPostJoinDTO.of({required String username, required String password, String? simpleDescription}) {
     return ReqAuthPostJoinDTO._(
       user: _User(
         username: username,
@@ -32,6 +29,5 @@ class _User {
   final String password;
   final String? simpleDescription;
 
-  _User(
-      {required this.username, required this.password, this.simpleDescription});
+  _User({required this.username, required this.password, this.simpleDescription});
 }

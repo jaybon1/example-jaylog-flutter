@@ -41,8 +41,7 @@ class _ArticlePage {
 
   factory _ArticlePage.fromMap(Map<String, dynamic> jsonMap) {
     return _ArticlePage(
-      content: List<_Article>.from(jsonMap['content']
-          .map((thisArticle) => _Article.fromMap(thisArticle))),
+      content: List<_Article>.from(jsonMap['content'].map((thisArticle) => _Article.fromMap(thisArticle))),
       page: _Page.fromMap(jsonMap['page']),
     );
   }

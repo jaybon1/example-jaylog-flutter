@@ -5,8 +5,7 @@ import 'package:jaylog/model/auth/repository/auth_repository.dart';
 import 'package:jaylog/util/util_function.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final authLoginViewModelLocal =
-    ChangeNotifierProvider.autoDispose<_AuthLoginViewModel>((ref) {
+final authLoginViewModelLocal = ChangeNotifierProvider.autoDispose<_AuthLoginViewModel>((ref) {
   return _AuthLoginViewModel();
 });
 

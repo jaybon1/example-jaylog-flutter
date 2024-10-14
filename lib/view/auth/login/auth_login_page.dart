@@ -45,8 +45,7 @@ class AuthLoginPage extends HookConsumerWidget {
         onSuccess: (String message) async {
           if (isRemembered.value) {
             final sharedPreferences = await SharedPreferences.getInstance();
-            sharedPreferences.setString(
-                "rememberedUsername", usernameController.text);
+            sharedPreferences.setString("rememberedUsername", usernameController.text);
           }
           authStoreState.setLoginUser();
           GoRouter.of(navigatorKey.currentContext!).pushReplacement("/");
@@ -56,8 +55,7 @@ class AuthLoginPage extends HookConsumerWidget {
 
     useEffect(() {
       SharedPreferences.getInstance().then((sharedPreferences) {
-        final rememberedUsername =
-            sharedPreferences.getString("rememberedUsername");
+        final rememberedUsername = sharedPreferences.getString("rememberedUsername");
         if (rememberedUsername != null) {
           usernameController.text = rememberedUsername;
           isRemembered.value = true;
@@ -107,9 +105,7 @@ class AuthLoginPage extends HookConsumerWidget {
               SizedBox(
                 width: 300,
                 child: TextButton(
-                  onPressed: authLoginViewModelState.isPendingLogin
-                      ? null
-                      : requestLogin,
+                  onPressed: authLoginViewModelState.isPendingLogin ? null : requestLogin,
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.white,
                     backgroundColor: Colors.blue,

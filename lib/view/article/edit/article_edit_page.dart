@@ -29,10 +29,8 @@ class ArticleEditPage extends HookConsumerWidget {
         await articleEditViewModelState.get(
           id: id,
         );
-        titleTextEditingController.text =
-            articleEditViewModelState.article?.title ?? '';
-        markdownTextEditingController.text =
-            articleEditViewModelState.article?.content ?? '';
+        titleTextEditingController.text = articleEditViewModelState.article?.title ?? '';
+        markdownTextEditingController.text = articleEditViewModelState.article?.content ?? '';
         print(articleEditViewModelState.article?.title);
       }
 
@@ -103,8 +101,7 @@ class ArticleEditPage extends HookConsumerWidget {
                                   context: context,
                                   content: message,
                                   callback: () async {
-                                    GoRouter.of(context)
-                                        .pushReplacement("/article/$id");
+                                    GoRouter.of(context).pushReplacement("/article/$id");
                                   },
                                 );
                               },

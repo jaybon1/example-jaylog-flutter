@@ -17,7 +17,6 @@ class MainPage extends HookConsumerWidget {
     final mainViewModelState = ref.watch(mainViewModelGlobal);
 
     useEffect(() {
-      print('mainViewModelState.get()' + appLifeCycleState.toString());
       if (appLifeCycleState == AppLifecycleState.resumed) {
         mainViewModelState.get(searchValue: searchStoreState.searchValue);
       }

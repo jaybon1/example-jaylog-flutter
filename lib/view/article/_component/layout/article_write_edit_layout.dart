@@ -6,8 +6,7 @@ import 'package:jaylog/view/article/_component/appbar/article_write_edit_app_bar
 class ArticleWriteEditLayout extends HookConsumerWidget {
   final Widget body;
 
-  const ArticleWriteEditLayout({Key? key, required this.body})
-      : super(key: key);
+  const ArticleWriteEditLayout({Key? key, required this.body}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

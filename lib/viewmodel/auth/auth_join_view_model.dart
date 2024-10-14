@@ -4,8 +4,7 @@ import 'package:jaylog/model/auth/dto/req/req_auth_post_join_dto.dart';
 import 'package:jaylog/model/auth/repository/auth_repository.dart';
 import 'package:jaylog/util/util_function.dart';
 
-final authJoinViewModelLocal =
-    ChangeNotifierProvider.autoDispose<_AuthJoinViewModel>((ref) {
+final authJoinViewModelLocal = ChangeNotifierProvider.autoDispose<_AuthJoinViewModel>((ref) {
   return _AuthJoinViewModel();
 });
 

@@ -113,8 +113,7 @@ class AuthJoinPage extends HookConsumerWidget {
                             );
                             return;
                           }
-                          if (passwordController.text !=
-                              passwordCheckController.text) {
+                          if (passwordController.text != passwordCheckController.text) {
                             UtilFunction.alert(
                               context: context,
                               content: '비밀번호가 일치하지 않습니다.',
@@ -128,24 +127,20 @@ class AuthJoinPage extends HookConsumerWidget {
                             reqAuthPostJoinDTO: ReqAuthPostJoinDTO.of(
                               username: usernameController.text,
                               password: passwordController.text,
-                              simpleDescription:
-                                  simpleDescriptionController.text,
+                              simpleDescription: simpleDescriptionController.text,
                             ),
                             onSuccess: (message) {
                               UtilFunction.alert(
                                 context: context,
                                 content: message,
                                 callback: () {
-                                  GoRouter.of(context)
-                                      .pushReplacement('/auth/login');
+                                  GoRouter.of(context).pushReplacement('/auth/login');
                                 },
                               );
                             },
                           );
                         },
-                  style: TextButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.blue),
+                  style: TextButton.styleFrom(foregroundColor: Colors.white, backgroundColor: Colors.blue),
                   child: authJoinViewModelState.isPendingJoin
                       ? const SizedBox(
                           width: 20,

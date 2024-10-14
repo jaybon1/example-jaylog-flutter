@@ -10,8 +10,7 @@ class CustomFetch {
     ..options.baseUrl = Constant.baseUrl
     ..interceptors.add(CustomDioInterceptor());
 
-  static Future<Map<String, dynamic>> getCustomHeadersWith(
-      Map<String, dynamic>? headers) async {
+  static Future<Map<String, dynamic>> getCustomHeadersWith(Map<String, dynamic>? headers) async {
     Map<String, dynamic> customHeaders = {
       "Content-Type": "application/json",
     };
@@ -31,8 +30,7 @@ class CustomFetch {
 
 class CustomDioInterceptor extends Interceptor {
   @override
-  void onRequest(
-      RequestOptions options, RequestInterceptorHandler handler) async {
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     options.headers = await CustomFetch.getCustomHeadersWith(options.headers);
     super.onRequest(options, handler);
   }
@@ -45,8 +43,7 @@ class CustomDioInterceptor extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode == 401) {
-      SharedPreferences sharedPreferences =
-          await SharedPreferences.getInstance();
+      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
       String? refreshJwt = sharedPreferences.getString("refreshJwt");
       if (refreshJwt == null) {
         handler.reject(err);
@@ -61,13 +58,10 @@ class CustomDioInterceptor extends Interceptor {
           ),
         );
         if (responseOfRefresh.statusCode == 200) {
-          sharedPreferences.setString(
-              "accessJwt", responseOfRefresh.data['data']['accessJwt']);
-          sharedPreferences.setString(
-              "refreshJwt", responseOfRefresh.data['data']['refreshJwt']);
+          sharedPreferences.setString("accessJwt", responseOfRefresh.data['data']['accessJwt']);
+          sharedPreferences.setString("refreshJwt", responseOfRefresh.data['data']['refreshJwt']);
           final RequestOptions requestOptions = err.requestOptions;
-          requestOptions.headers['Authorization'] =
-              'Bearer ${responseOfRefresh.data['data']['accessJwt']}';
+          requestOptions.headers['Authorization'] = 'Bearer ${responseOfRefresh.data['data']['accessJwt']}';
           // final responseOfRetry = await CustomFetch.dio.request(
           //   requestOptions.path,
           //   options: Options(
