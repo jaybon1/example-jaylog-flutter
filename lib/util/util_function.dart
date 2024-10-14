@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -82,6 +83,9 @@ class UtilFunction {
     if (imageUrl == null) {
       return const NetworkImage(Constant.defaultProfileImage);
     }
+    if (imageUrl.startsWith("data:")) {
+      return MemoryImage(base64Decode(imageUrl.split(",").last));
+    }
     if (imageUrl.startsWith("http")) {
       return NetworkImage(imageUrl);
     }
@@ -92,6 +96,22 @@ class UtilFunction {
       return FileImage(File(imageUrl));
     }
     throw Exception("Invalid imageUrl");
+  }
+
+  static Future<File> resizeXfileImageTo20x20(XFile? xfile) async {
+    if (xfile == null) {
+      throw Exception("이미지를 불러오는데 실패했습니다.");
+    }
+    final imageBytes = await xfile.readAsBytes();
+    final image = imageLib.decodeImage(imageBytes);
+    if (image == null) {
+      throw Exception("이미지를 불러오는데 실패했습니다.");
+    }
+    final resizedImage = imageLib.copyResize(image, width: 20, height: 20);
+    List<int> pngBytes = imageLib.encodePng(resizedImage);
+    final resizedImageFile = File('${Directory.systemTemp.path}/cropped_image.png');
+    await resizedImageFile.writeAsBytes(pngBytes);
+    return resizedImageFile;
   }
 
   static Future<File> resizeXfileImageTo50x50(XFile? xfile) async {
@@ -114,6 +134,7 @@ class UtilFunction {
     print(error);
     print(stackTrace);
     if (error is DioException && error.response?.data != null) {
+      print(error.response?.data);
       alert(
         context: context ?? navigatorKey.currentContext!,
         content: error.response?.data["message"] ?? "예상치 못한 에러가 발생했습니다.\n관리자에게 문의하세요.",

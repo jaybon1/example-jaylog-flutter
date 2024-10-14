@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -75,32 +76,16 @@ class MyInfoPage extends HookConsumerWidget {
                     children: [
                       InkWell(
                         onTap: () {
-                          if (authStoreState.loginUser!.profileImage == profileImage.value || (passwordController.text.isEmpty && passwordCheckController.text.isEmpty && simpleDescriptionController.text.isEmpty)) {
-                            return;
-                          }
-
-                          Future<void> temp() async {
+                          Future<void> setProfileImage() async {
                             final imagePicker = ImagePicker();
                             final xfile = await imagePicker.pickImage(source: ImageSource.gallery);
-                            final resizedImageFile = await UtilFunction.resizeXfileImageTo50x50(xfile);
+                            final resizedImageFile = await UtilFunction.resizeXfileImageTo20x20(xfile);
                             profileImage.value = resizedImageFile.path;
                           }
 
-                          temp();
-
-                          // final imagePicker = ImagePicker();
-                          // imagePicker.pickImage(source: ImageSource.gallery)
-                          // .then((xfile) {
-                          //   UtilFunction.resizeXfileImageTo50x50(xfile)
-                          //
-                          //
-                          //
-                          // })
-                          // .catchError((e) {
-                          //   print(e);
-                          // });
+                          setProfileImage();
                         },
-                        child: Text(
+                        child: const Text(
                           "프로필 이미지 선택",
                           style: TextStyle(
                             fontSize: 20,
@@ -171,8 +156,49 @@ class MyInfoPage extends HookConsumerWidget {
                   SizedBox(
                     width: 150,
                     child: TextButton(
-                      onPressed: () {
-                        GoRouter.of(context).pushReplacement('/auth/login');
+                      onPressed: () async {
+                        FocusScope.of(context).unfocus();
+                        if (authStoreState.loginUser!.profileImage == profileImage.value && passwordController.text.isEmpty && passwordCheckController.text.isEmpty && simpleDescriptionController.text.isEmpty) {
+                          UtilFunction.alert(
+                            context: context,
+                            content: "변경된 사항이 없습니다.",
+                          );
+                          return;
+                        }
+                        if (passwordController.text != passwordCheckController.text) {
+                          UtilFunction.alert(
+                            context: context,
+                            content: "비밀번호와 확인값이 일치하지 않습니다.",
+                          );
+                          return;
+                        }
+                        final formMap = Map<String, dynamic>();
+                        if (authStoreState.loginUser!.profileImage != profileImage.value) {
+                          final filename = profileImage.value.split('/').last;
+                          formMap['profileImage'] = await MultipartFile.fromFile(
+                            profileImage.value,
+                            contentType: DioMediaType.parse("image/png"),
+                          );
+                        }
+                        if (passwordController.text.isNotEmpty) {
+                          formMap['password'] = passwordController.text;
+                        }
+                        if (simpleDescriptionController.text.isNotEmpty) {
+                          formMap['simpleDescription'] = simpleDescriptionController.text;
+                        }
+                        final formData = FormData.fromMap(formMap);
+                        await myInfoViewModelState.putInfo(
+                          formData: formData,
+                          onSuccess: (message) {
+                            UtilFunction.alert(
+                              context: context,
+                              content: "$message\n 다시 로그인해주세요.",
+                              callback: () {
+                                GoRouter.of(context).go('/auth/login');
+                              },
+                            );
+                          },
+                        );
                       },
                       style: TextButton.styleFrom(foregroundColor: Colors.white, backgroundColor: Colors.blue),
                       child: const Text('수정하기'),

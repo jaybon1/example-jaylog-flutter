@@ -13,7 +13,7 @@ class _MyInfoViewModel extends ChangeNotifier {
 
   bool get isPendingPutInfo => _isPendingPutInfo;
 
-  void putInfo({
+  Future<void> putInfo({
     required FormData formData,
     required Function onSuccess,
     Function onError = UtilFunction.handleDefaultError,

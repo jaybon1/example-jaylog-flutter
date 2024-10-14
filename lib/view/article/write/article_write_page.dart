@@ -120,6 +120,7 @@ class ArticleWritePage extends HookConsumerWidget {
                           onPressed: articleWriteViewModelState.isPendingPost
                               ? null
                               : () async {
+                                  FocusScope.of(context).unfocus();
                                   if (titleTextEditingController.text.isEmpty) {
                                     UtilFunction.alert(
                                       context: context,
