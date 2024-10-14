@@ -137,7 +137,7 @@ class ArticleCard extends HookConsumerWidget {
                                 color: Colors.grey,
                               ),
                         Padding(
-                          padding: EdgeInsets.only(left: 5),
+                          padding: const EdgeInsets.only(left: 5),
                           child: Text(
                             likeCount.toString(),
                           ),

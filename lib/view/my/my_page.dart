@@ -15,7 +15,6 @@ class MyPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     final appLifeCycleState = useAppLifecycleState();
 
     final authStoreState = ref.watch(authStoreGlobal);

@@ -151,53 +151,87 @@ class ArticleByIdPage extends HookConsumerWidget {
               ),
               const Padding(padding: EdgeInsets.only(bottom: 15)),
               Row(
-                children: authStoreState.loginUser?.username !=
-                        articleByIdViewModelState.article!.writer.username
-                    ? []
-                    : [
-                        ArticleButton(
-                          child: const Text("수정"),
-                          color: Colors.green,
-                          onPressed: () {
-                            GoRouter.of(context).push("/article/$id/edit");
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                    onTap: articleByIdViewModelState.isPendingPostLike
+                        ? null
+                        : () async {
+                            articleByIdViewModelState.postLike(
+                              id: id,
+                            );
                           },
-                        ),
-                        const Padding(padding: EdgeInsets.only(right: 10)),
-                        ArticleButton(
-                          color: Colors.red,
-                          onPressed: articleByIdViewModelState.isPendingDelete
-                              ? null
-                              : () async {
-                                  final isDelete = await UtilFunction.confirm(
-                                    context: context,
-                                    content: "정말로 삭제하시겠습니까?",
-                                  );
-                                  if (isDelete) {
-                                    articleByIdViewModelState.delete(
-                                      id: id,
-                                      onSuccess: (message) {
-                                        UtilFunction.alert(
-                                          context: context,
-                                          content: message,
-                                          callback: () {
-                                            GoRouter.of(context).pop();
-                                          },
-                                        );
-                                      },
-                                    );
-                                  }
-                                },
-                          child: articleByIdViewModelState.isPendingDelete
-                              ? const SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 3,
-                                  ),
-                                )
-                              : const Text("삭제"),
+                    child: Row(
+                      children: [
+                        articleByIdViewModelState.article!.isLikeClicked
+                            ? const Icon(
+                                Icons.favorite,
+                                color: Colors.red,
+                              )
+                            : const Icon(
+                                Icons.favorite_border,
+                                color: Colors.grey,
+                              ),
+                        const Padding(padding: EdgeInsets.only(right: 5)),
+                        Text(
+                          articleByIdViewModelState.article!.likeCount
+                              .toString(),
                         ),
                       ],
+                    ),
+                  ),
+                  Row(
+                    children: authStoreState.loginUser?.username !=
+                            articleByIdViewModelState.article!.writer.username
+                        ? []
+                        : [
+                            ArticleButton(
+                              child: const Text("수정"),
+                              color: Colors.green,
+                              onPressed: () {
+                                GoRouter.of(context).push("/article/$id/edit");
+                              },
+                            ),
+                            const Padding(padding: EdgeInsets.only(right: 10)),
+                            ArticleButton(
+                              color: Colors.red,
+                              onPressed:
+                                  articleByIdViewModelState.isPendingDelete
+                                      ? null
+                                      : () async {
+                                          final isDelete =
+                                              await UtilFunction.confirm(
+                                            context: context,
+                                            content: "정말로 삭제하시겠습니까?",
+                                          );
+                                          if (isDelete) {
+                                            articleByIdViewModelState.delete(
+                                              id: id,
+                                              onSuccess: (message) {
+                                                UtilFunction.alert(
+                                                  context: context,
+                                                  content: message,
+                                                  callback: () {
+                                                    GoRouter.of(context).pop();
+                                                  },
+                                                );
+                                              },
+                                            );
+                                          }
+                                        },
+                              child: articleByIdViewModelState.isPendingDelete
+                                  ? const SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 3,
+                                      ),
+                                    )
+                                  : const Text("삭제"),
+                            ),
+                          ],
+                  )
+                ],
               ),
               const Padding(padding: EdgeInsets.only(bottom: 15)),
               MarkdownBody(

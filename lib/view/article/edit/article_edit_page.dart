@@ -78,39 +78,38 @@ class ArticleEditPage extends HookConsumerWidget {
                     onPressed: articleEditViewModelState.isPendingPut
                         ? null
                         : () async {
-                      if (titleTextEditingController.text.isEmpty) {
-                        UtilFunction.alert(
-                          context: context,
-                          content: "제목을 입력하세요.",
-                        );
-                        return;
-                      }
-                      if (markdownTextEditingController
-                          .text.isEmpty) {
-                        UtilFunction.alert(
-                          context: context,
-                          content: "내용을 입력하세요.",
-                        );
-                        return;
-                      }
-                      await articleEditViewModelState.put(
-                        id: id,
-                        reqArticlePutDTO: ReqArticlePutDTO.of(
-                          title: titleTextEditingController.text,
-                          content:
-                          markdownTextEditingController.text,
-                        ),
-                        onSuccess: (String message) async {
-                          UtilFunction.alert(
-                            context: context,
-                            content: message,
-                            callback: () async {
-                              GoRouter.of(context).pushReplacement("/article/$id");
-                            },
-                          );
-                        },
-                      );
-                    },
+                            if (titleTextEditingController.text.isEmpty) {
+                              UtilFunction.alert(
+                                context: context,
+                                content: "제목을 입력하세요.",
+                              );
+                              return;
+                            }
+                            if (markdownTextEditingController.text.isEmpty) {
+                              UtilFunction.alert(
+                                context: context,
+                                content: "내용을 입력하세요.",
+                              );
+                              return;
+                            }
+                            await articleEditViewModelState.put(
+                              id: id,
+                              reqArticlePutDTO: ReqArticlePutDTO.of(
+                                title: titleTextEditingController.text,
+                                content: markdownTextEditingController.text,
+                              ),
+                              onSuccess: (String message) async {
+                                UtilFunction.alert(
+                                  context: context,
+                                  content: message,
+                                  callback: () async {
+                                    GoRouter.of(context)
+                                        .pushReplacement("/article/$id");
+                                  },
+                                );
+                              },
+                            );
+                          },
                     child: articleEditViewModelState.isPendingPut
                         ? const SizedBox(
                             width: 20,

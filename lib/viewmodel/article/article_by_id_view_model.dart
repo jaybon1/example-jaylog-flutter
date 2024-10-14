@@ -53,18 +53,25 @@ class _ArticleByIdViewModel extends ChangeNotifier {
     }
   }
 
-  void postLike(BigInt id) {
+  Future<void> postLike({
+    required BigInt id,
+    onError = UtilFunction.handleDefaultError,
+  }) async {
     _isPendingPostLike = true;
     notifyListeners();
-    ArticleRepository.postLike(id)
-        .then((response) {
-          // 성공 시 처리
-        })
-        .onError(UtilFunction.handleDefaultError)
-        .whenComplete(() {
-          _isPendingPostLike = false;
-          notifyListeners();
-        });
+    try {
+      final response = await ArticleRepository.postLike(id);
+      final resDTO = response.data;
+      _article = _article!.copyWith(
+        likeCount: resDTO["data"]["article"]["likeCount"],
+        isLikeClicked: resDTO["data"]["article"]["isLikeClicked"],
+      );
+    } on Exception catch (e, stackTrace) {
+      onError(e, stackTrace);
+    } finally {
+      _isPendingPostLike = false;
+      notifyListeners();
+    }
   }
 }
 
@@ -88,6 +95,28 @@ class _Article {
     required this.isLikeClicked,
     required this.createDate,
   });
+
+  _Article copyWith({
+    int? id,
+    _Writer? writer,
+    String? title,
+    String? thumbnail,
+    String? content,
+    int? likeCount,
+    bool? isLikeClicked,
+    DateTime? createDate,
+  }) {
+    return _Article(
+      id: id ?? this.id,
+      writer: writer ?? this.writer,
+      title: title ?? this.title,
+      thumbnail: thumbnail ?? this.thumbnail,
+      content: content ?? this.content,
+      likeCount: likeCount ?? this.likeCount,
+      isLikeClicked: isLikeClicked ?? this.isLikeClicked,
+      createDate: createDate ?? this.createDate,
+    );
+  }
 
   factory _Article.fromMap(dynamic jsonMap) {
     return _Article(

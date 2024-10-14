@@ -1,5 +1,3 @@
-
-
 class ResDTO<T> {
   final int code;
   final String message;

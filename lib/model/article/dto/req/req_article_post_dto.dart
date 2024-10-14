@@ -1,5 +1,4 @@
 class ReqArticlePostDTO {
-
   final _Article article;
 
   ReqArticlePostDTO._({
@@ -23,11 +22,9 @@ class ReqArticlePostDTO {
       'article': article.toMap(),
     };
   }
-
 }
 
 class _Article {
-
   final String title;
   final String content;
 
@@ -42,5 +39,4 @@ class _Article {
       'content': content,
     };
   }
-
 }
