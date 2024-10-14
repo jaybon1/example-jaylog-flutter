@@ -23,7 +23,6 @@ class _ArticleEditViewModel extends ChangeNotifier {
     try {
       final response = await ArticleRepository.get(id);
       final resDTO = response.data;
-      print(resDTO);
       _article = _Article.fromMap(resDTO["data"]["article"]);
     } on Exception catch (e, stackTrace) {
       onError(e, stackTrace);

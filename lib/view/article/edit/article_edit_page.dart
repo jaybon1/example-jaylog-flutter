@@ -31,7 +31,6 @@ class ArticleEditPage extends HookConsumerWidget {
         );
         titleTextEditingController.text = articleEditViewModelState.article?.title ?? '';
         markdownTextEditingController.text = articleEditViewModelState.article?.content ?? '';
-        print(articleEditViewModelState.article?.title);
       }
 
       _getArticle();
