@@ -20,10 +20,6 @@ class MyPage extends HookConsumerWidget {
     final authStoreState = ref.watch(authStoreGlobal);
     final myViewModelState = ref.watch(myViewModelGlobal);
 
-    final tabController = useTabController(initialLength: 2);
-
-    useListenable(tabController);
-
     useEffect(() {
       if (authStoreState.loginUser == null) {
         UtilFunction.alert(
@@ -94,48 +90,59 @@ class MyPage extends HookConsumerWidget {
               ],
             ),
           ),
-          TabBar(
-            controller: tabController,
-            tabs: const [
-              Tab(
-                text: '내 글',
-              ),
-              Tab(
-                text: '내가 좋아요 한 글',
-              ),
-            ],
+          HookConsumer(
+            builder: (context, ref, child) {
+              final tabController = useListenable(useTabController(initialLength: 2));
+
+              return Column(
+                children: [
+                  TabBar(
+                    controller: tabController,
+                    tabs: const [
+                      Tab(
+                        text: '내 글',
+                      ),
+                      Tab(
+                        text: '내가 좋아요 한 글',
+                      ),
+                    ],
+                  ),
+                  const Divider(),
+                  ...tabController.index == 0
+                      ? myViewModelState.myArticleList
+                              ?.map((thisArticle) => ArticleCard(
+                                    key: ValueKey(thisArticle.id),
+                                    id: thisArticle.id,
+                                    username: thisArticle.writer.username,
+                                    profileImage: thisArticle.writer.profileImage,
+                                    title: thisArticle.title,
+                                    thumbnail: thisArticle.thumbnail,
+                                    summary: thisArticle.summary,
+                                    likeCount: thisArticle.likeCount,
+                                    isLikeClicked: thisArticle.isLikeClicked,
+                                    createDate: thisArticle.createDate,
+                                  ))
+                              .toList() ??
+                          []
+                      : myViewModelState.likeArticleList
+                              ?.map((thisArticle) => ArticleCard(
+                                    key: ValueKey(thisArticle.id),
+                                    id: thisArticle.id,
+                                    username: thisArticle.writer.username,
+                                    profileImage: thisArticle.writer.profileImage,
+                                    title: thisArticle.title,
+                                    thumbnail: thisArticle.thumbnail,
+                                    summary: thisArticle.summary,
+                                    likeCount: thisArticle.likeCount,
+                                    isLikeClicked: thisArticle.isLikeClicked,
+                                    createDate: thisArticle.createDate,
+                                  ))
+                              .toList() ??
+                          []
+                ],
+              );
+            },
           ),
-          ...tabController.index == 0
-              ? myViewModelState.myArticleList
-                      ?.map((thisArticle) => ArticleCard(
-                            key: ValueKey(thisArticle.id),
-                            id: thisArticle.id,
-                            username: thisArticle.writer.username,
-                            profileImage: thisArticle.writer.profileImage,
-                            title: thisArticle.title,
-                            thumbnail: thisArticle.thumbnail,
-                            summary: thisArticle.summary,
-                            likeCount: thisArticle.likeCount,
-                            isLikeClicked: thisArticle.isLikeClicked,
-                            createDate: thisArticle.createDate,
-                          ))
-                      .toList() ??
-                  []
-              : myViewModelState.likeArticleList
-                      ?.map((thisArticle) => ArticleCard(
-                            key: ValueKey(thisArticle.id),
-                            id: thisArticle.id,
-                            username: thisArticle.writer.username,
-                            profileImage: thisArticle.writer.profileImage,
-                            title: thisArticle.title,
-                            thumbnail: thisArticle.thumbnail,
-                            summary: thisArticle.summary,
-                            likeCount: thisArticle.likeCount,
-                            isLikeClicked: thisArticle.isLikeClicked,
-                            createDate: thisArticle.createDate,
-                          ))
-                      .toList() ??
-                  [],
         ],
       ),
     );
