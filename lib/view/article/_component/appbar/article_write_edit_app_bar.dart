@@ -11,7 +11,6 @@ class WriteEditAppBar extends HookConsumerWidget implements PreferredSizeWidget 
   Widget build(BuildContext context, WidgetRef ref) {
     final goRouterState = GoRouterState.of(context);
     final authStoreState = ref.watch(authStoreGlobal);
-    final authStore = ref.read(authStoreGlobal);
 
     return AppBar(
       toolbarHeight: 75,
@@ -38,7 +37,7 @@ class WriteEditAppBar extends HookConsumerWidget implements PreferredSizeWidget 
             authStoreState.loginUser != null
                 ? Row(
                     children: [
-                      CircleProfileImage(imageUrl: "https://picsum.photos/50"),
+                      CircleProfileImage(imageUrl: authStoreState.loginUser!.profileImage),
                       PopupMenuButton(
                           offset: const Offset(0, 40),
                           icon: const Icon(Icons.arrow_drop_down),
@@ -56,7 +55,7 @@ class WriteEditAppBar extends HookConsumerWidget implements PreferredSizeWidget 
                               PopupMenuItem(
                                 child: const Text("로그아웃"),
                                 onTap: () {
-                                  authStore.logout();
+                                  authStoreState.logout();
                                 },
                               ),
                             ];
@@ -68,7 +67,7 @@ class WriteEditAppBar extends HookConsumerWidget implements PreferredSizeWidget 
                       ElevatedButton(
                         onPressed: () {
                           if (goRouterState.fullPath != "/auth/login") {
-                            authStore.logout();
+                            authStoreState.logout();
                             GoRouter.of(context).go("/auth/login");
                           }
                         },
